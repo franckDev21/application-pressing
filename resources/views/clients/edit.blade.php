@@ -1,9 +1,8 @@
 <x-dashboard-layout>
-  <div class="text-gray-400 mb-4">
-    <a class="hover:underline" href="{{ route('client.index') }}">Gestion des clients </a> >
-    <span class="">Modification des informations du client </span> > 
-    <span class="text-cyan-600">{{ $client->nom." ".$client->prenom }} </span>
-  </div>
+  <h1 class="text-2xl border-b pb-4 font-extrabold text-gray-500">
+    <span>#Modification  | </span>
+    <span class="text-cyan-500">{{ $client->nom." ".$client->prenom }}</span>
+  </h1>
 
   <form action="{{ route('client.update',$client->id) }}" method="POST" class="bg-white pt-4 pb-6 rounded-lg">
     @method('PATCH')

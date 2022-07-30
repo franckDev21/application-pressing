@@ -6,6 +6,10 @@
         @if (Session::has('success'))
             <div class="p-3 rounded-md bg-green-100 text-green-400 text-2xl text-center font-extrabold">{{ session('success') }}</div>
         @endif
+        <h1 class="text-2xl border-b pb-4 font-extrabold text-gray-500">
+            <span>#Liste des </span>
+            <span class="text-cyan-500">Clients</span>
+        </h1>
 
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">

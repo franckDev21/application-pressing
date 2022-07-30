@@ -1,8 +1,9 @@
 <x-dashboard-layout>
-  <div class="text-gray-400 mb-4">
-    <a class="hover:underline" href="{{ route('commande.index') }}">Commandes </a> >
-    <span class="text-cyan-600">Liste des commandes </span>
-  </div>
+
+  <h1 class="text-2xl border-b pb-4 font-extrabold text-gray-500">
+    <span>#Liste des </span>
+    <span class="text-cyan-500">commandes</span>
+  </h1>
 
   <table class="min-w-full divide-y divide-gray-200">
     <thead class="bg-gray-50">

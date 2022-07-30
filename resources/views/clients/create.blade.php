@@ -1,8 +1,8 @@
 <x-dashboard-layout>
-  <div class="text-gray-400 mb-4">
-    <a class="hover:underline" href="{{ route('client.index') }}">Gestion des clients </a> >
-    <span class="text-cyan-600">Nouveau client </span>
-  </div>
+  <h1 class="text-2xl border-b pb-4 font-extrabold text-gray-500">
+    <span>#AJouter un nouveau </span>
+    <span class="text-cyan-500">Client</span>
+  </h1>
 
   <form action="{{ route('client.store') }}" method="POST" class="bg-white pt-4 pb-6 rounded-lg">
     @csrf
