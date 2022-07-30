@@ -22,7 +22,7 @@ return new class extends Migration
                 'EN_COURS_DE_REPASSAGE',
                 'REPASSÉ',
                 'TERMINÉ'
-            ]);
+            ])->default('REÇU');
             $table->foreignId('type_vetement_id')->constrained()->onDelete('cascade');
             $table->foreignId('commande_id')->constrained()->onDelete('cascade');
             $table->enum('service_demander',['LAVAGE','LAVAGE_REPASSAGE'])->default('LAVAGE_REPASSAGE');

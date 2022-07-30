@@ -1,5 +1,4 @@
 import './bootstrap';
-import Task from './Task';
 
 import Alpine from 'alpinejs';
 
@@ -10,8 +9,9 @@ Alpine.start();
 
 import React from 'react';
 import {createRoot}  from 'react-dom/client';
+import Commande from './Commande/Commande';
 
 
-if (document.getElementById('app')) {
-    createRoot(document.getElementById('app') as HTMLElement).render(<Task title='Hello' />)
+if (document.getElementById('commande')) {
+    createRoot(document.getElementById('commande') as HTMLElement).render(<Commande />)
 }

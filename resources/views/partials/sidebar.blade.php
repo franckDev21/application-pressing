@@ -62,8 +62,8 @@
                             
                         </span>
                         <ul x-show="open" class="-mt-2 rounded-md bg-gray-100 pb-2">
-                            <li  class="flex justify-end w-full"><a href="{{ route('commande.index') }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 mt-2" >Nouvelle commande</a></li>
                             <li  class="flex justify-end w-full"><a href="{{ route('commande.index') }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 mt-2 {{ request()->routeIs('commande.index') ? 'bg-white':'' }}" >liste des commandes</a></li>
+                            <li  class="flex justify-end w-full"><a href="{{ route('commande.create') }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 mt-2 {{ request()->routeIs('commande.create') ? 'bg-white':'' }}" >Nouvelle commande</a></li>
                         </ul>
                     </li>
                     <li>

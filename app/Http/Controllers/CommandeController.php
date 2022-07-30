@@ -40,6 +40,11 @@ class CommandeController extends Controller
         Session::flash('success',"La mise du vêtement à été éfféctuer avec succès !");
         return back();
     }
+
+    public function vetementTypeApi(){
+        $vetementTypes = TypeVetement::all();
+        return response()->json($vetementTypes);
+    }
     
 
     /**
@@ -49,7 +54,7 @@ class CommandeController extends Controller
      */
     public function create()
     {
-        //
+        return view('commandes.create');
     }
 
     /**

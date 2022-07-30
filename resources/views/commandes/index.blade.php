@@ -23,6 +23,9 @@
             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               vêtements
             </th>
+            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              
+            </th>
         </tr>
     </thead>
     <tbody class="bg-white text-gray-600">
@@ -45,6 +48,9 @@
                   <span class="font-extrabold text-gray-500">{{ $commande->vetements->count() }} Vêtement{{ $commande->vetements->count() > 1 ? 's':'' }}</span> <br>
                   <a href="{{ route('commande.vetements',$commande) }}" class="text-xs px-2 inline-block py-1 rounded-md text-green-600 bg-green-100 mt-2" >voir l'etat des vêtements</a>
                   
+                </td>
+                <td class="p-4 whitespace-nowrap text-sm">
+                  <button class="px-3 py-1 text-xs text-white bg-gray-600 rounded-md ">editer</button>
                 </td>
             </tr>
         @endforeach

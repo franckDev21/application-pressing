@@ -19,6 +19,14 @@ class ClientController extends Controller
         return view('clients.index',compact('clients'));
     }
 
+    public function indexApi()
+    {
+        if(!auth()->user()) abort(403);
+        
+        $clients = Client::all();
+        return response()->json($clients);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

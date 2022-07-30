@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function(){
 
     // clients
     Route::prefix('clients')->name('client.')->group(function(){
+        Route::get('/api',[ClientController::class,'indexApi'])->name('indexApi');
         Route::get('/',[ClientController::class,'index'])->name('index');
         Route::get('/create',[ClientController::class,'create'])->name('create');
         Route::post('/',[ClientController::class,'store'])->name('store');
@@ -41,7 +42,8 @@ Route::middleware(['auth'])->group(function(){
         Route::patch('/{commande}',[CommandeController::class,'update'])->name('update');
         Route::delete('/{commande}',[CommandeController::class,'destroy'])->name('destroy');
         Route::get('/{commande}/vetements',[CommandeController::class,'vetements'])->name('vetements');
-        Route::post('/vetements',[CommandeController::class,'vetementStore'])->name('vetementStore');
 
+        Route::get('/vetements/api',[CommandeController::class,'vetementTypeApi'])->name('vetementTypeApi');
+        Route::post('/vetements',[CommandeController::class,'vetementStore'])->name('vetementStore');
     });
 });
