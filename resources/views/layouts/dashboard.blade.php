@@ -29,11 +29,14 @@
 
             <div class="bg-gray-900 opacity-50 hidden fixed inset-0 z-10" id="sidebarBackdrop"></div>
             <div id="main-content" class="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64">
+
+                {{-- content --}}
                 <main>
                     <div class="pt-6 px-4">
                      {{ $slot }}
                     </div>
                 </main>
+
                 <footer
                     class="bg-white md:flex md:items-center md:justify-between shadow rounded-lg p-4 md:p-6 xl:p-8 my-6 mx-4">
                     <ul class="flex items-center flex-wrap mb-6 md:mb-0">
@@ -83,6 +86,10 @@
                 </p>
             </div>
         </div>
+
+        {{-- JS --}}
+        @yield('js')
+
         <script async defer src="https://buttons.github.io/buttons.js"></script>
         <script src="https://demo.themesberg.com/windster/app.bundle.js"></script>
     </div>

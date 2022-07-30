@@ -19,7 +19,6 @@ class CommandeFactory extends Factory
     {
         $qte = rand(1,10);
         return [
-            'quantite' => $qte,
             'cout_total' => $qte * rand(100,100000),
             'etat' => ['PAYER','IMPAYER','AVANCER'][rand(0,2)],
             'date_livraison' => now(),

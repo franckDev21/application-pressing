@@ -24,6 +24,7 @@
                         <span class="text-cyan-500">Clear.</span><span>Pressing</span>
                     </span>
                 </a>
+
                 <form action="#" method="GET" class="hidden lg:block lg:pl-32 w-full">
                     <label for="topbar-search" class="sr-only">Search</label>
                     <div class="mt-1 relative lg:w-full">
@@ -35,11 +36,12 @@
                                     clip-rule="evenodd"></path>
                             </svg>
                         </div>
-                        <input type="text" name="email" id="topbar-search"
+                        <input type="text" autocomplete=FALSE name="q" id="topbar-search"
                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full pl-10 p-2.5"
                             placeholder="Search">
                     </div>
                 </form>
+
             </div>
             <div class="flex items-center">
                 <button id="toggleSidebarMobileSearch" type="button"

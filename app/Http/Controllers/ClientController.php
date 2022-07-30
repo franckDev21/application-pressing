@@ -89,7 +89,7 @@ class ClientController extends Controller
         
         $client->update($data);
         Session::flash('success',"Les informations du client ($client->nom $client->prenom) ont été  mise à avec succès !");
-        return redirect()->route('client.index');
+        return to_route('client.index');
     }
 
     /**
@@ -100,6 +100,8 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        Session::flash('success',"La suppréssion de ($client->nom $client->prenom) ont été  éfféctué avec succès !");
+        $client->delete();
+        return to_route('client.index');
     }
 }

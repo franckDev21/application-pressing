@@ -15,6 +15,6 @@ class VetementSeeder extends Seeder
      */
     public function run()
     {
-        Vetement::factory(30)->create();
+        Vetement::factory(150)->create();
     }
 }

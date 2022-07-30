@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CommandeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,5 +29,19 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/',[ClientController::class,'store'])->name('store');
         Route::get('/{client}',[ClientController::class,'edit'])->name('edit');
         Route::patch('/{client}',[ClientController::class,'update'])->name('update');
+        Route::delete('/{client}',[ClientController::class,'destroy'])->name('destroy');
+    });
+
+    // commandes
+    Route::prefix('commandes')->name('commande.')->group(function(){
+        Route::get('/',[CommandeController::class,'index'])->name('index');
+        Route::get('/create',[CommandeController::class,'create'])->name('create');
+        Route::post('/',[CommandeController::class,'store'])->name('store');
+        Route::get('/{commande}',[CommandeController::class,'edit'])->name('edit');
+        Route::patch('/{commande}',[CommandeController::class,'update'])->name('update');
+        Route::delete('/{commande}',[CommandeController::class,'destroy'])->name('destroy');
+        Route::get('/{commande}/vetements',[CommandeController::class,'vetements'])->name('vetements');
+        Route::post('/vetements',[CommandeController::class,'vetementStore'])->name('vetementStore');
+
     });
 });

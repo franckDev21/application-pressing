@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('commandes', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantite');
             $table->double('cout_total');
             $table->enum('etat',['PAYER','IMPAYER','AVANCER']);
             $table->text('description')->nullable();
