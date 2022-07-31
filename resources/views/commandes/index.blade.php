@@ -50,7 +50,7 @@
                   
                 </td>
                 <td class="p-4 whitespace-nowrap text-sm">
-                  <button class="px-3 py-1 text-xs text-white bg-gray-600 rounded-md ">editer</button>
+                  <a href="{{ route('commande.edit',$commande) }}" class="px-3 py-1 text-xs text-white bg-gray-600 rounded-md ">editer</a>
                 </td>
             </tr>
         @endforeach

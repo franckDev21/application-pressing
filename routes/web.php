@@ -45,5 +45,6 @@ Route::middleware(['auth'])->group(function(){
 
         Route::get('/vetements/api',[CommandeController::class,'vetementTypeApi'])->name('vetementTypeApi');
         Route::post('/vetements',[CommandeController::class,'vetementStore'])->name('vetementStore');
+        Route::get('/{commande}/api',[CommandeController::class,'showApi'])->name('show');
     });
 });

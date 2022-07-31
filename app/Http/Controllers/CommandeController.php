@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommandeRessourceEdit;
 use App\Models\Commande;
 use App\Models\TypeVetement;
 use App\Models\Vetement;
@@ -31,14 +32,30 @@ class CommandeController extends Controller
             "vetement_id"       => "required",
             "type_vetement_id"  => "required",
             "statut"            => "required",
-            "service_demander"  => "required"
+            "service_demander"  => "required",
+            "quantite" => 'required'
         ]);
 
         $vetement = Vetement::findOrFail($request->vetement_id);
         $vetement->update($data);
 
+        $cout_total = 0;
+        // On recalcule la cout total de la commande
+        foreach ($vetement->commande->vetements as $vet) {
+            $cout_total += $this->multiplication($vet->quantite,$vet->prix_unitaire);
+        }
+
+        // update de la commande
+        $commande = Commande::findOrFail($vetement->commande->id);
+        $commande->cout_total = $cout_total;
+        $commande->save();
+
         Session::flash('success',"La mise du vêtement à été éfféctuer avec succès !");
         return back();
+    }
+
+    private function multiplication(int $qte,int $pu) {
+        return $qte * $pu;
     }
 
     public function vetementTypeApi(){
@@ -72,10 +89,12 @@ class CommandeController extends Controller
         
         // on sauvegarder les vêtements de la commande
         foreach($request->vetements as $vetement){
-            if($vetement['qte'] !== 0){
+            if($vetement['qte'] !== 0 && $vetement['prix_unitaire'] !== 0){
                 Vetement::create([
                     'type_vetement_id' => $vetement['type_vetement_id'],
-                    'commande_id' => $commande->id
+                    'commande_id' => $commande->id,
+                    'quantite' => $vetement['qte'],
+                    'prix_unitaire' => $vetement['prix_unitaire']
                 ]);
             }
         }
@@ -102,7 +121,15 @@ class CommandeController extends Controller
      */
     public function edit(Commande $commande)
     {
-        //
+        return view('commandes.edit',compact('commande'));
+    }
+
+    public function showApi(Request $request,Commande $commande){
+        return response()->json([
+            'commande' => $commande,
+            'vetements' => $commande->vetements,
+            'date_format' => $commande->date_livraison->format('Y-m-d')
+        ]);
     }
 
     /**
@@ -114,7 +141,34 @@ class CommandeController extends Controller
      */
     public function update(Request $request, Commande $commande)
     {
-        //
+        // on met a jour la commande
+        $commande->update($request->commande);
+
+        // on parcours les vetements
+        foreach($request->vetements as $vetement){
+            // on verifie grace a l'id si le vetement se trouve en BD
+            $vetementDB = Vetement::find($vetement['id']);
+
+            if($vetement['qte'] !== 0 && $vetement['prix_unitaire'] !== 0){
+                if($vetementDB){ // si oui on le modifie
+                    $vetementDB->update([
+                        'quantite' => $vetement['qte'],
+                        'prix_unitaire' => $vetement['prix_unitaire'],
+                        'type_vetement_id' => $vetement['type_vetement_id']
+                    ]);
+                }else{ // sinon en l'enregistre
+                    Vetement::create([
+                        'type_vetement_id' => $vetement['type_vetement_id'],
+                        'commande_id' => $commande->id,
+                        'quantite' => $vetement['qte'],
+                        'prix_unitaire' => $vetement['prix_unitaire']
+                    ]);
+                }
+            }
+            
+        }
+
+        return response()->json('success');
     }
 
     /**

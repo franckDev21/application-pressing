@@ -4,6 +4,7 @@ import axios from 'axios';
 import FormClient from '../FormClient/FormClient';
 
 type CommandeType = {
+  id ?: string
 }
 
 type ClientType = {
@@ -23,13 +24,26 @@ type VetementModel = {
   type_vetement_id : number | null
 }
 
-const Commande : FC<CommandeType> = () => {
+type CommandeModel = {
+  client_id: number,
+  cout_total: string,
+  created_at: string,
+  date_livraison: string,
+  description: null
+  etat: string,
+  id: number,
+  updated_at: string,
+}
+
+const Commande : FC<CommandeType> = ({id}) => {
 
   const [clientId,setClientId] = useState('');
   const [clients,setClients] = useState([]);
   const [vetementTypes,setVetementTypes] = useState([]);
   const [vetements,setVetements] = useState<VetementModel[]>([]);
   const [dateLivraison,setdateLivraison] = useState('');
+  const [commandeState,setCommandeState] = useState<any>(null);
+  const [description,setDescription] = useState<string|null>(null);
 
 
   const [showAddClient,setShowAddClient] = useState(false);
@@ -83,33 +97,90 @@ const Commande : FC<CommandeType> = () => {
     return somme;
   }
 
+  const calculTotalVetement = ():number => {
+    let somme:number = 0;
+    vetements.forEach(vetement => {
+      somme += (parseInt(vetement.qte.toString(),10) || 0);
+    });
+    return somme;
+  }
+
   const multiplication = (qte: number,pu: number): number => {
     return qte * pu;
   }
 
   const handleSubmitForm = () => {
-    const data = {
-      commande : {
-        client_id : clientId,
-        cout_total : calculTotal(),
-        date_livraison: dateLivraison,
-        description : null
-      },
-      vetements
+    // store
+    if(!id){
+      const data = {
+        commande : {
+          client_id : clientId,
+          cout_total : calculTotal(),
+          date_livraison: dateLivraison,
+          description
+        },
+        vetements
+      }
+  
+      setLoad(true);
+  
+      axios.post('http://localhost:8000/commandes',data).then(res => {
+        setLoad(false);
+        if(res.data === 'success'){
+          (window.location as any) = '/commandes'
+        }
+      }).catch(err => {
+        console.log(err); 
+        setLoad(false);
+      });
+    }else{ // update
+      setLoad(true);
+
+      delete commandeState?.vetements
+
+      const data_commande = {
+        commande : {
+          ...commandeState,
+          description : description,
+          client_id : parseInt(clientId,10),
+          date_livraison : dateLivraison,
+          cout_total : calculTotal(),
+        },
+        vetements
+      }
+
+      axios.patch(`http://localhost:8000/commandes/${id}`,data_commande).then(res => {
+        setLoad(false);
+        console.log(res.data);
+        if(res.data === 'success'){
+          (window.location as any) = '/commandes'
+        }
+      }).catch(err => {
+        console.log(err); 
+        setLoad(false);
+      });
+
     }
 
-    setLoad(true);
+  }
 
-    axios.post('http://localhost:8000/commandes',data).then(res => {
-      setLoad(false);
-      if(res.data === 'success'){
-        (window.location as any) = '/commandes'
-      }
-    }).catch(err => {
-      console.log(err); 
-      setLoad(false);
+  const initCommande = (commande : CommandeModel,vetements: any[],date : string) => {
+    setdateLivraison(date);
+    setClientId(commande.client_id.toString());
+    setDescription(commande.description);
+
+    let tabVetements :any = [];
+
+    vetements.forEach(vetement => {
+      tabVetements.push({
+        id: vetement.id,
+        qte : vetement.quantite,
+        prix_unitaire : vetement.prix_unitaire,
+        type_vetement_id : vetement.type_vetement_id
+      });
     });
 
+    setVetements([...tabVetements]);
   }
 
   useEffect(() => {
@@ -120,10 +191,19 @@ const Commande : FC<CommandeType> = () => {
     axios.get('http://localhost:8000/commandes/vetements/api').then(res => {
       setVetementTypes(res.data);
     }).catch(err => console.log(err));
+
+    if(id){
+      axios.get(`http://localhost:8000/commandes/${id}/api`).then(res => {
+        setCommandeState(res.data.commande);
+        initCommande(res.data.commande,res.data.vetements,res.data.date_format);
+      }).catch(err => console.log(err));
+    }
+
   },[]);
   
   useEffect(() => {
     calculTotal();
+    calculTotalVetement();
   },[vetements]);
 
 
@@ -141,16 +221,16 @@ const Commande : FC<CommandeType> = () => {
             </select>
            <div className='flex items-center justify-between w-1/3'>
             <input onChange={(e) => setdateLivraison(e.target.value)} value={dateLivraison} type="date" placeholder='date' className='ml-2 w-1/2 px-4 py-1 border-none outline-none ring-0  focus:outline-none focus:ring-0 rounded-md bg-gray-100' />
-            <button onClick={() => setShowAddClient(true)} className='px-3 w-1/2 py-1 rounded-md bg-cyan-600 text-white ml-2'>Nouveau client</button>
+            {!id && <button onClick={() => setShowAddClient(true)} className='px-3 w-1/2 py-1 rounded-md bg-cyan-600 text-white ml-2'>Nouveau client</button>}
            </div>
           </div>
 
-          <textarea placeholder='Description ... ' className='py-2 border-none outline-none ring-0  focus:outline-none focus:ring-0 rounded-md bg-gray-100 px-3 mt-4 w-full'></textarea>
+          <textarea value={description || ''} onChange={(e) => setDescription(e.target.value)} placeholder='Description ... ' className='py-2 border-none outline-none ring-0  focus:outline-none focus:ring-0 rounded-md bg-gray-100 px-3 mt-4 w-full'></textarea>
           
           <span className='mb-3 mt-10 inline-block'></span>
 
           <div className="flex justify-between items-center pt-1 pb-2">
-            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | {vetements.length}</h1>
+            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | {calculTotalVetement()}</h1>
             <button onClick={() => addVetement()} className='px-3 py-1 rounded-md bg-gray-600 text-white'>Ajouter</button>
           </div>
 

@@ -19,6 +19,8 @@ class VetementFactory extends Factory
     public function definition()
     {
         return [
+            'quantite' => rand(1,10),
+            'prix_unitaire' => rand(500,40000),
             'type_vetement_id' => TypeVetement::inRandomOrder()->first()->id,
             'commande_id' => Commande::inRandomOrder()->first()->id,
             // 'service_demander' => ['LAVAGE','LAVAGE_REPASSAGE'][rand(0,1)],

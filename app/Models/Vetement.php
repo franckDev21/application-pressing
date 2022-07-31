@@ -13,10 +13,16 @@ class Vetement extends Model
         'statut',
         'type_vetement_id',
         'commande_id',
-        'service_demander'
+        'service_demander',
+        'quantite',
+        'prix_unitaire'
     ];
 
     public function typeVetement(){
         return $this->belongsTo(TypeVetement::class);
+    }
+
+    public function commande(){
+        return $this->belongsTo(Commande::class);
     }
 }

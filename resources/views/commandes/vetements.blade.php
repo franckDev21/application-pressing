@@ -8,7 +8,7 @@
       <span>#Commade de </span>
       <span class="text-cyan-500">{{ $commande->client->nom }} {{ $commande->client->prenom }}</span> | 
       <span class="">
-        {{ $commande->vetements->count() }} Vêtement{{ $commande->vetements->count() > 1 ? 's' : '' }}
+        {{ $commande->vetements->count() }} Type{{ $commande->vetements->count() > 1 ? 's' : '' }} de vêtement
       </span>
     </h1>
 
@@ -17,7 +17,10 @@
       <thead class="bg-gray-50 border-b">
           <tr>
             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                type de vêtement
+                Quantité
+            </th>
+            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              type de vêtement
             </th>
             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 statut
@@ -35,6 +38,9 @@
           <tbody class="border-none" x-data="{ open: false }" key="{{ $key }}">
             <tr>
               <td class="p-4 text-sm font-normal text-gray-900">
+                <span class="font-semibold">{{ $vetement->quantite }}</span>
+              </td>
+              <td class="p-4 text-sm font-normal text-gray-900">
                 <span class="font-semibold">{{ $vetement->typeVetement->name }}</span>
               </td>
               <td class="p-4 text-sm font-normal text-gray-500">
@@ -44,24 +50,28 @@
                 {{ $vetement->service_demander }}
               </td>
               <td class="p-4 justify-start">
+                <span class="bg-red-100 cursor-pointer inline-block text-sm text-red-400 px-3 py-1 rounded-md">supprimer</span>
                 <span @click="open = !open" class="bg-orange-100 cursor-pointer inline-block text-sm text-orange-400 px-3 py-1 rounded-md">editer</span>
               </td>
             </tr>
             <tr x-show="open">
-              <td colspan="4" class="p-4 bg-gray-50">
+              <td colspan="5" class="p-4 bg-gray-50">
                 <form class="inline-flex w-full" action="{{ route('commande.vetementStore') }}" method="post">
                   @csrf
                   @method('POST')
                   <input name="vetement_id" type="hidden" hidden value="{{ $vetement->id }}">
-                  <div class="w-[80%] flex">
-                    <div class="w-1/3 px-1">
+                  <div class="w-[90%] flex">
+                    <div class="w-1/4 px-1">
+                      <input type="number" value="{{ old('quantite',$vetement->quantite) }}" class="w-full px-3 py-1 rounded-md" name="quantite">
+                    </div>
+                    <div class="w-1/4 px-1">
                       <select name="type_vetement_id" placeholder="type" class="w-full px-3 py-1 rounded-md">
                         @foreach ($typeVetements as $type)
                           <option @selected($vetement->typeVetement->name === $type->name ) value="{{ $type->id }}">{{ $type->name }}</option>
                         @endforeach
                       </select>
                     </div>
-                    <div class="w-1/3 px-1">
+                    <div class="w-1/4 px-1">
                       <select name="statut" placeholder="type" class="w-full px-3 py-1 rounded-md">
                         <option @selected($vetement->statut === 'REÇU' ) value="REÇU">Réçu</option>
                         <option @selected($vetement->statut === 'EN_COURS_DE_LAVAGE' ) value="EN_COURS_DE_LAVAGE">En cour de lavage</option>
@@ -71,7 +81,7 @@
                         <option @selected($vetement->statut === 'TERMINÉ' ) value="TERMINÉ">Terminé</option>
                       </select>
                     </div>
-                    <div class="w-1/3 px-1">
+                    <div class="w-1/4 px-1">
                       <select name="service_demander" placeholder="type" class="w-full px-3 py-1 rounded-md">
                         <option @selected($vetement->service_demander === 'LAVAGE' ) value="LAVAGE">Lavage</option>
                         <option @selected($vetement->service_demander === 'LAVAGE_REPASSAGE' ) value="LAVAGE_REPASSAGE">Lavage et répassage</option>
