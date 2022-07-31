@@ -32,5 +32,8 @@ body{
     background-color: #0b8baf7d;
     border-radius: 5px;
   }
+  *{
+    user-select: none;
+  }
 }
 

@@ -25,18 +25,22 @@ type VetementModel = {
 
 const Commande : FC<CommandeType> = () => {
 
+  const [clientId,setClientId] = useState('');
   const [clients,setClients] = useState([]);
   const [vetementTypes,setVetementTypes] = useState([]);
   const [vetements,setVetements] = useState<VetementModel[]>([]);
+  const [dateLivraison,setdateLivraison] = useState('');
+
 
   const [showAddClient,setShowAddClient] = useState(false);
+  const [load,setLoad] = useState(false);
 
   const addVetement = () => {
     const vetement: VetementModel = {
       id : Date.now(),
       qte : 0,
       prix_unitaire : 0,
-      type_vetement_id : null
+      type_vetement_id : (vetementTypes[0] as any).id
     }
 
     setVetements([...vetements,vetement]);
@@ -83,6 +87,31 @@ const Commande : FC<CommandeType> = () => {
     return qte * pu;
   }
 
+  const handleSubmitForm = () => {
+    const data = {
+      commande : {
+        client_id : clientId,
+        cout_total : calculTotal(),
+        date_livraison: dateLivraison,
+        description : null
+      },
+      vetements
+    }
+
+    setLoad(true);
+
+    axios.post('http://localhost:8000/commandes',data).then(res => {
+      setLoad(false);
+      if(res.data === 'success'){
+        (window.location as any) = '/commandes'
+      }
+    }).catch(err => {
+      console.log(err); 
+      setLoad(false);
+    });
+
+  }
+
   useEffect(() => {
     axios.get('http://localhost:8000/clients/api').then(res => {
       setClients(res.data);
@@ -95,7 +124,8 @@ const Commande : FC<CommandeType> = () => {
   
   useEffect(() => {
     calculTotal();
-  },[vetements])
+  },[vetements]);
+
 
   return (
     <div className='p-4 bg-white rounded-md mt-3 shadow'>
@@ -103,13 +133,19 @@ const Commande : FC<CommandeType> = () => {
         <>
           <h1 className='text-xl font-bold text-gray-400 mb-3'>Client</h1>
           <div className="flex items-center mb-5">
-            <select className='px-14 w-2/3 py-1 border-none outline-none ring-0  focus:outline-none focus:ring-0 rounded-md bg-gray-100'>
+            <select onChange={(e) => setClientId(e.target.value)} value={clientId} className='px-14 w-2/3 py-1 border-none outline-none ring-0  focus:outline-none focus:ring-0 rounded-md bg-gray-100'>
+              <option value=''>selectionnez un client</option>
               {clients.map((client : ClientType) => (
                 <option value={client.id} key={client.id}>{client.prenom} {client.nom}</option>
               ))}
             </select>
-            <button onClick={() => setShowAddClient(true)} className='px-3 py-1 rounded-md bg-cyan-600 text-white ml-4'>Ajouter un nouveau client</button>
+           <div className='flex items-center justify-between w-1/3'>
+            <input onChange={(e) => setdateLivraison(e.target.value)} value={dateLivraison} type="date" placeholder='date' className='ml-2 w-1/2 px-4 py-1 border-none outline-none ring-0  focus:outline-none focus:ring-0 rounded-md bg-gray-100' />
+            <button onClick={() => setShowAddClient(true)} className='px-3 w-1/2 py-1 rounded-md bg-cyan-600 text-white ml-2'>Nouveau client</button>
+           </div>
           </div>
+
+          <textarea placeholder='Description ... ' className='py-2 border-none outline-none ring-0  focus:outline-none focus:ring-0 rounded-md bg-gray-100 px-3 mt-4 w-full'></textarea>
           
           <span className='mb-3 mt-10 inline-block'></span>
 
@@ -170,7 +206,9 @@ const Commande : FC<CommandeType> = () => {
           </div>
 
           <div className="text-center mb-4 mt-6">
-            <span className="px-6 cursor-pointer rounded-md font-bold py-3 hover:bg-cyan-700 active:scale-[90%] bg-cyan-600 text-white">Enregistrer la commande</span>
+            <span onClick={handleSubmitForm} className={` ${(calculTotal() <= 0 || clientId === '' || dateLivraison === '') ? 'disabled':''} px-6 cursor-pointer rounded-md font-bold py-3 hover:bg-cyan-700 active:scale-[90%] bg-cyan-600 text-white`}>
+              {load ? 'Chargement ... ':'Enregistrer la commande'}
+            </span>
           </div>
         </>
       ):(
@@ -181,4 +219,4 @@ const Commande : FC<CommandeType> = () => {
   )
 }
 
-export default Commande
+export default Commande;

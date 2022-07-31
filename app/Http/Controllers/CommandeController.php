@@ -17,7 +17,7 @@ class CommandeController extends Controller
      */
     public function index()
     {
-        $commandes = Commande::with(['client','vetements'])->paginate(6);
+        $commandes = Commande::latest()->with(['client','vetements'])->paginate(6);
         return view('commandes.index',compact('commandes'));
     }
 
@@ -29,7 +29,7 @@ class CommandeController extends Controller
     public function vetementStore(Request $request){
         $data = $request->validate([
             "vetement_id"       => "required",
-            "type_vetement_id"     => "required",
+            "type_vetement_id"  => "required",
             "statut"            => "required",
             "service_demander"  => "required"
         ]);
@@ -65,7 +65,20 @@ class CommandeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // on crée la commande
+        $data = $request->commande;
+        $commande = Commande::create($data);
+
+        
+        // on sauvegarder les vêtements de la commande
+        foreach($request->vetements as $vetement){
+            Vetement::create([
+                'type_vetement_id' => $vetement['type_vetement_id'],
+                'commande_id' => $commande->id
+            ]);
+        }
+
+        return response()->json('success');
     }
 
     /**

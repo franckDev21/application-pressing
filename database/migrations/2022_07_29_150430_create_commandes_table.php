@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('commandes', function (Blueprint $table) {
             $table->id();
             $table->double('cout_total');
-            $table->enum('etat',['PAYER','IMPAYER','AVANCER']);
+            $table->enum('etat',['PAYER','IMPAYER','AVANCER'])->default('IMPAYER');
             $table->text('description')->nullable();
             $table->timestamp('date_livraison');
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
