@@ -99,7 +99,10 @@ class CommandeController extends Controller
             }
         }
 
-        return response()->json('success');
+        return response()->json([
+            'success' => 'success',
+            'commande_id' => $commande->id
+        ]);
     }
 
     /**

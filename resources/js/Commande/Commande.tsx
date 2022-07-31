@@ -126,8 +126,9 @@ const Commande : FC<CommandeType> = ({id}) => {
   
       axios.post('http://localhost:8000/commandes',data).then(res => {
         setLoad(false);
-        if(res.data === 'success'){
-          (window.location as any) = '/commandes'
+        if(res.data.success){
+          let id = +res.data.commande_id;
+          (window.location as any) = `/commandes/${id}`;
         }
       }).catch(err => {
         console.log(err); 
@@ -287,7 +288,11 @@ const Commande : FC<CommandeType> = ({id}) => {
 
           <div className="text-center mb-4 mt-6">
             <span onClick={handleSubmitForm} className={` ${(calculTotal() <= 0 || clientId === '' || dateLivraison === '') ? 'disabled':''} px-6 cursor-pointer rounded-md font-bold py-3 hover:bg-cyan-700 active:scale-[90%] bg-cyan-600 text-white`}>
-              {load ? 'Chargement ... ':'Enregistrer la commande'}
+              {load ? 'Chargement ... ':(
+                <>
+                  {id ? 'Mettre à jour la commande':'Enregistrer la commande'}
+                </>
+              )}
             </span>
           </div>
         </>
