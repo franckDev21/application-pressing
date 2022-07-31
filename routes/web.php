@@ -31,6 +31,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/{client}',[ClientController::class,'edit'])->name('edit');
         Route::patch('/{client}',[ClientController::class,'update'])->name('update');
         Route::delete('/{client}',[ClientController::class,'destroy'])->name('destroy');
+
+        Route::post('/api',[ClientController::class,'storeApi'])->name('storeApi');
     });
 
     // commandes

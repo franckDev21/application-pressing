@@ -57,6 +57,29 @@ class ClientController extends Controller
         return redirect()->route('client.index');
     }
 
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeApi(Request $request)
+    {
+        $data = $request->validate([
+            'nom' => 'required|string|min:3|max:50',
+            'prenom' => 'required|string|min:3|max:50',
+            'email' => 'email|unique:clients',
+            'tel' => 'required|min:3|max:50'
+        ]);
+
+        $client = Client::create($data);
+
+        return response()->json([
+            'success' => 'Votre client a été ajouté avec succès !',
+            'client' => $client
+        ]);
+    }
+
     /**
      * Display the specified resource.
      *

@@ -45,6 +45,8 @@ const Commande : FC<CommandeType> = ({id}) => {
   const [commandeState,setCommandeState] = useState<any>(null);
   const [description,setDescription] = useState<string|null>(null);
 
+  const [addNewClientState,setAddNewClientState] = useState(false);
+
 
   const [showAddClient,setShowAddClient] = useState(false);
   const [load,setLoad] = useState(false);
@@ -201,6 +203,12 @@ const Commande : FC<CommandeType> = ({id}) => {
     }
 
   },[]);
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/clients/api').then(res => {
+      setClients(res.data);
+    }).catch(err => console.log(err));
+  },[addNewClientState]);
   
   useEffect(() => {
     calculTotal();
@@ -297,7 +305,10 @@ const Commande : FC<CommandeType> = ({id}) => {
           </div>
         </>
       ):(
-        <FormClient onClickCallback={(value) => setShowAddClient(value)} />
+        <FormClient addNewClient={(value) => {
+          setAddNewClientState(value);
+          setShowAddClient(false);
+        }} onClickCallback={(value) => setShowAddClient(value)} />
       )}
       
     </div>
