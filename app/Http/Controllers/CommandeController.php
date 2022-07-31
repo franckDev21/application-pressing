@@ -72,10 +72,12 @@ class CommandeController extends Controller
         
         // on sauvegarder les vêtements de la commande
         foreach($request->vetements as $vetement){
-            Vetement::create([
-                'type_vetement_id' => $vetement['type_vetement_id'],
-                'commande_id' => $commande->id
-            ]);
+            if($vetement['qte'] !== 0){
+                Vetement::create([
+                    'type_vetement_id' => $vetement['type_vetement_id'],
+                    'commande_id' => $commande->id
+                ]);
+            }
         }
 
         return response()->json('success');

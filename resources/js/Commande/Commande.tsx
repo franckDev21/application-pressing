@@ -198,7 +198,7 @@ const Commande : FC<CommandeType> = () => {
               </table>
             </>
           ):(
-            <div className='px-4 text-center py-3 bg-red-100 rounded-md text-red-400 font-semibold'>Aucun vêtement , cliquez sur le bouton "Ajouter" </div>
+            <div className='px-4 text-center py-3 bg-gray-100 rounded-md text-gray-400 font-semibold'>Aucun vêtement , cliquez sur le bouton "Ajouter" </div>
           )}
           
           <div className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
