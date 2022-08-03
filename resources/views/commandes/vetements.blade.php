@@ -8,7 +8,7 @@
       <span>#Commade de </span>
       <span class="text-cyan-500">{{ $commande->client->nom }} {{ $commande->client->prenom }}</span> | 
       <span class="">
-        {{ $commande->vetements->count() }} Type{{ $commande->vetements->count() > 1 ? 's' : '' }} de vêtement
+        {{ Help\Helper::getTotalVetement($commande) }} Vêtement{{ Help\Helper::getTotalVetement($commande) > 1 ? 's':'' }} | {{ $commande->cout_total }} F
       </span>
     </h1>
 
@@ -35,6 +35,7 @@
       </thead>
       <tbody class="bg-white">
         @foreach ($commande->vetements as $key => $vetement)
+
           <tbody class="border-none" x-data="{ open: false }" key="{{ $key }}">
             <tr>
               <td class="p-4 text-sm font-normal text-gray-900">
@@ -43,15 +44,22 @@
               <td class="p-4 text-sm font-normal text-gray-900">
                 <span class="font-semibold">{{ $vetement->typeVetement->name }}</span>
               </td>
-              <td class="p-4 text-sm font-normal text-gray-500">
+              <td class="p-4 text-sm font-normal">
                 {{ $vetement->statut }}
               </td>
               <td class="p-4 text-sm font-semibold text-gray-900">
                 {{ $vetement->service_demander }}
               </td>
               <td class="p-4 justify-start">
-                <span class="bg-red-100 cursor-pointer inline-block text-sm text-red-400 px-3 py-1 rounded-md">supprimer</span>
+
+                <form action="{{ route('commande.vetementDelete',[$commande,$vetement]) }}" class="inline" method="post">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="bg-red-100 cursor-pointer inline-block text-sm text-red-400 px-3 py-1 rounded-md">supprimer</button>
+                </form>
+
                 <span @click="open = !open" class="bg-orange-100 cursor-pointer inline-block text-sm text-orange-400 px-3 py-1 rounded-md">editer</span>
+              
               </td>
             </tr>
             <tr x-show="open">
@@ -95,6 +103,7 @@
               </td>
             </tr>
           </tbody>
+          
         @endforeach
         
       </tbody>

@@ -6,6 +6,7 @@ use App\Http\Resources\CommandeRessourceEdit;
 use App\Models\Commande;
 use App\Models\TypeVetement;
 use App\Models\Vetement;
+use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -25,6 +26,26 @@ class CommandeController extends Controller
     public function vetements(Request $request,Commande $commande){
         $typeVetements = TypeVetement::all();
         return view('commandes.vetements',compact('commande','typeVetements'));
+    }
+
+    public function vetementDelete(Request $request,Commande $commande,Vetement $vetement){
+        // supprimer le vetement
+        $vetement->delete();
+
+        $commande = Commande::findOrFail($commande->id);
+
+        $cout_total = 0;
+        // On recalcule la cout total de la commande
+        foreach ($commande->vetements as $vet) {
+            $cout_total += $this->multiplication($vet->quantite,$vet->prix_unitaire);
+        }
+
+        // update de la commande
+        $commande->cout_total = $cout_total;
+        $commande->save();
+
+        Session::flash('success'," vêtement supprimé !");
+        return back();
     }
 
     public function vetementStore(Request $request){
@@ -103,6 +124,15 @@ class CommandeController extends Controller
             'success' => 'success',
             'commande_id' => $commande->id
         ]);
+    }
+
+    public function payer(Request $request,Commande $commande){
+        $commande->update([
+            'etat' => 'PAYER'
+        ]);
+
+        Session::flash('success',"Commande payé !");
+        return back();
     }
 
     /**

@@ -44,7 +44,9 @@ Route::middleware(['auth'])->group(function(){
         Route::patch('/{commande}',[CommandeController::class,'update'])->name('update');
         Route::delete('/{commande}',[CommandeController::class,'destroy'])->name('destroy');
         Route::get('/{commande}/vetements',[CommandeController::class,'vetements'])->name('vetements');
-
+        Route::delete('/{commande}/vetement/{vetement}',[CommandeController::class,'vetementDelete'])->name('vetementDelete');
+        Route::post('/{commande}/payer',[CommandeController::class,'payer'])->name('payer');
+        
         Route::get('/vetements/api',[CommandeController::class,'vetementTypeApi'])->name('vetementTypeApi');
         Route::post('/vetements',[CommandeController::class,'vetementStore'])->name('vetementStore');
         Route::get('/{commande}/api',[CommandeController::class,'showApi'])->name('show');

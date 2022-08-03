@@ -37,7 +37,7 @@
                 <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
                     {{ $commande->date_livraison->format('d M Y') }}
                 </td>
-                <td class="p-4 whitespace-nowrap text-sm">
+                <td class="p-4 whitespace-nowrap text-sm font-extrabold {{ Help\Helper::getColorForCommandeStatut($commande->etat) }}">
                     {{ $commande->etat }}
                 </td>
                 <td class="p-4 whitespace-nowrap text-sm">
@@ -45,7 +45,7 @@
                   <span>{{ $commande->client->email }}</span>
                 </td>
                 <td class="p-4 whitespace-nowrap text-sm">
-                  <span class="font-extrabold text-gray-500">{{ $commande->vetements->count() }} Vêtement{{ $commande->vetements->count() > 1 ? 's':'' }}</span> <br>
+                  <span class="font-extrabold text-gray-500">{{ Help\Helper::getTotalVetement($commande) }} Vêtement{{ Help\Helper::getTotalVetement($commande) > 1 ? 's':'' }}</span> <br>
                   <a href="{{ route('commande.vetements',$commande) }}" class="text-xs px-2 inline-block py-1 rounded-md text-green-600 bg-green-100 mt-2" >voir l'etat des vêtements</a>
                   
                 </td>
