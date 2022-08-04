@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommandeResource;
 use App\Http\Resources\CommandeRessourceEdit;
 use App\Models\Commande;
 use App\Models\TypeVetement;
@@ -21,6 +22,22 @@ class CommandeController extends Controller
     {
         $commandes = Commande::latest()->with(['client','vetements'])->paginate(6);
         return view('commandes.index',compact('commandes'));
+    }
+
+    public function indexApi(){
+        $commandes = Commande::latest()->with(['client','vetements'])->get();
+
+        $commandesTable = [];
+        
+        foreach ($commandes as $commande) {
+            $commandesTable[] = [
+                'quantite_total_vetement' => $commande->vetements->sum('quantite'),
+                'commande' => $commande,
+                'date_exp' => $commande->date_livraison->format('d M Y')
+            ];
+        }
+
+        return $commandesTable;
     }
 
     public function vetements(Request $request,Commande $commande){
@@ -128,7 +145,7 @@ class CommandeController extends Controller
 
     public function payer(Request $request,Commande $commande){
         $commande->update([
-            'etat' => 'PAYER'
+            'etat' => 'SOLDER'
         ]);
 
         Session::flash('success',"Commande payé !");

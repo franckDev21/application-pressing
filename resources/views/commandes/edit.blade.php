@@ -7,7 +7,7 @@
 
     <div>
       <button class="px-4 rounded-md bg-gray-500 text-white py-1 border-4 uppercase font-bold hover:bg-gray-600 transition-all active:scale-[.90] border-gray-600">Imprimer le reçu</button>
-      @if ($commande->etat !== 'PAYER')
+      @if ($commande->etat !== 'SOLDER')
         <form action="{{ route('commande.payer',$commande) }}" method="post" class="inline">
           @csrf
           <button type="submit" class="px-4 rounded-md bg-green-500 text-white py-1 border-4 uppercase font-bold hover:bg-green-600 transition-all active:scale-[.90] border-green-600">payer la commande</button>

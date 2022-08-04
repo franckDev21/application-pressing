@@ -4,13 +4,17 @@
   @endif
 
   <div class="p-4 shadow rounded-md bg-white">
-    <h1 class="text-2xl border-b pb-2 font-extrabold text-gray-500">
-      <span>#Commade de </span>
-      <span class="text-cyan-500">{{ $commande->client->nom }} {{ $commande->client->prenom }}</span> | 
-      <span class="">
-        {{ Help\Helper::getTotalVetement($commande) }} Vêtement{{ Help\Helper::getTotalVetement($commande) > 1 ? 's':'' }} | {{ $commande->cout_total }} F
-      </span>
-    </h1>
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl border-b  font-extrabold text-gray-500">
+        <span>#Commade de </span>
+        <span class="text-cyan-500">{{ $commande->client->nom }} {{ $commande->client->prenom }}</span> | 
+        <span class="">
+          {{ Help\Helper::getTotalVetement($commande) }} Vêtement{{ Help\Helper::getTotalVetement($commande) > 1 ? 's':'' }} | {{ $commande->cout_total }} F
+        </span>
+      </h1>
+
+      <a class="px-4 py-2 border-2 uppercase font-semibold text-sm bg-gray-500 text-white rounded-md" href="{{ route('commande.edit',$commande) }}">voir la commande</a>
+    </div>
 
   <div class="mt-4">
     <table class="min-w-full divide-y divide-gray-200">

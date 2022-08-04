@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function(){
     // commandes
     Route::prefix('commandes')->name('commande.')->group(function(){
         Route::get('/',[CommandeController::class,'index'])->name('index');
+        Route::get('/api',[CommandeController::class,'indexApi'])->name('indexApi');
         Route::get('/create',[CommandeController::class,'create'])->name('create');
         Route::post('/',[CommandeController::class,'store'])->name('store');
         Route::get('/{commande}',[CommandeController::class,'edit'])->name('edit');

@@ -20,7 +20,7 @@ class CommandeFactory extends Factory
         $qte = rand(1,10);
         return [
             'cout_total' => $qte * rand(100,100000),
-            'etat' => ['PAYER','IMPAYER','AVANCER'][rand(0,2)],
+            'etat' => ['SOLDER','IMPAYER','AVANCER'][rand(0,2)],
             'date_livraison' => now(),
             'description' => $this->faker->paragraph,
             'client_id' => Client::inRandomOrder()->first()->id

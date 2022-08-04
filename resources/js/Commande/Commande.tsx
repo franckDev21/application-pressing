@@ -2,6 +2,7 @@ import React, { ChangeEvent, FC, useEffect, useState } from 'react'
 import './index.scss';
 import axios from 'axios';
 import FormClient from '../FormClient/FormClient';
+import { format_number } from '../utils/utils';
 
 type CommandeType = {
   id ?: string
@@ -291,7 +292,7 @@ const Commande : FC<CommandeType> = ({id}) => {
           )}
           
           <div className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
-            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{calculTotal()} F</span>
+            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotal().toString())}</span>
           </div>
 
           <div className="text-center mb-4 mt-6">

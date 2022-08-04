@@ -10,6 +10,7 @@ Alpine.start();
 import React from 'react';
 import {createRoot}  from 'react-dom/client';
 import Commande from './Commande/Commande';
+import CommandeTable from './CommandeTable/CommandeTable';
 
 
 if (document.getElementById('commande')) {
@@ -20,4 +21,10 @@ if (document.getElementById('commandeEdit')) {
     const idCommande = document.getElementById('commandeEdit')?.dataset.id || '';
     
     createRoot(document.getElementById('commandeEdit') as HTMLElement).render(<Commande id={idCommande} />)
+}
+
+if (document.getElementById('CommandeTable')) {
+    const idCommande = document.getElementById('CommandeTable')?.dataset.id || '';
+    
+    createRoot(document.getElementById('CommandeTable') as HTMLElement).render(<CommandeTable />)
 }
