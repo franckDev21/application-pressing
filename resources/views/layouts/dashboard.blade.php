@@ -10,7 +10,8 @@
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    
     @viteReactRefresh
     <!-- Scripts -->
     @vite(['resources/scss/app.scss', 'resources/js/app.tsx'])

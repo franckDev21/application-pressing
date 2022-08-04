@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
 class ClientController extends Controller
@@ -135,4 +136,19 @@ class ClientController extends Controller
         $client->delete();
         return to_route('client.index');
     }
+
+
+    public function printClient(){
+        // 
+        $pdf = App::make('dompdf.wrapper');
+        
+        $clients = Client::all();
+
+        $pdf->loadView('pdf.client-pdf', compact(
+            'clients'
+        ));
+
+        return $pdf->stream();
+    }
+
 }

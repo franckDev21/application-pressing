@@ -9,6 +9,7 @@ use App\Models\TypeVetement;
 use App\Models\Vetement;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
 class CommandeController extends Controller
@@ -230,5 +231,18 @@ class CommandeController extends Controller
     public function destroy(Commande $commande)
     {
         //
+    }
+
+    public function printCommande(){
+        // 
+        $pdf = App::make('dompdf.wrapper');
+        
+        $commandes = Commande::all();
+
+        $pdf->loadView('pdf.commande-pdf', compact(
+            'commandes'
+        ));
+
+        return $pdf->stream();
     }
 }

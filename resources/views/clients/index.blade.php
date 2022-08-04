@@ -6,10 +6,14 @@
         @if (Session::has('success'))
             <div class="p-3 rounded-md bg-green-100 text-green-400 text-2xl text-center font-extrabold">{{ session('success') }}</div>
         @endif
-        <h1 class="text-2xl border-b pb-4 font-extrabold text-gray-500">
-            <span>#Liste des </span>
-            <span class="text-cyan-500">Clients</span>
-        </h1>
+        
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl border-b pb-4 font-extrabold text-gray-500">
+                <span>#Liste des </span>
+                <span class="text-cyan-500">Clients</span>
+            </h1>
+            <a href="{{ route('client.printClient') }}" target="_blank" class="px-4 rounded-md text-xs bg-gray-500 text-white py-1 border-4 uppercase font-bold hover:bg-gray-600 transition-all active:scale-[.90] border-gray-600">Imprimer la liste des clients <i class="las la-download text-sm text-white ml-1"></i></a>
+        </div>
 
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -27,7 +31,7 @@
                         Tél
                     </th>
                     <th scope="col" class="p-4 text-left  font-medium text-gray-500 uppercase tracking-wider">
-                        <a href="{{ route('client.create') }}" class="bg-gray-600 rounded-md text-white px-4 py-2 text-xs">Ajouter un nouveau client</a>
+                        <a href="{{ route('client.create') }}" class="px-4 rounded-md bg-cyan-500 text-white py-1 border-4 uppercase font-bold hover:bg-cyan-600 transition-all active:scale-[.90] border-cyan-200 text-xs"><i class="las la-plus"></i> Ajouter un nouveau client</a>
                     </th>
                 </tr>
             </thead>
@@ -47,7 +51,7 @@
                             {{ $client->tel }}
                         </td>
                         <td class="p-4 flex items-center justify-center">
-                            <a href="{{ route('client.edit',$client) }}" title="Edité {{ $client->nom.' '.$client->prenom }}" class="px-4 py-1 text-sm inline-block cursor-pointer rounded-md text-white bg-cyan-400 mr-1">éditer</a>
+                            <a href="{{ route('client.edit',$client) }}" title="Edité {{ $client->nom.' '.$client->prenom }}" class="px-4 py-1 text-sm inline-block cursor-pointer rounded-md text-orange-500 bg-orange-100 mr-1">éditer</a>
                             <form action="{{ route('client.destroy',$client) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')

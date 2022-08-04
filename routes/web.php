@@ -24,6 +24,9 @@ Route::middleware(['auth'])->group(function(){
 
     // clients
     Route::prefix('clients')->name('client.')->group(function(){
+
+        Route::get('/print',[ClientController::class,'printClient'])->name('printClient');
+        
         Route::get('/api',[ClientController::class,'indexApi'])->name('indexApi');
         Route::get('/',[ClientController::class,'index'])->name('index');
         Route::get('/create',[ClientController::class,'create'])->name('create');
@@ -37,6 +40,9 @@ Route::middleware(['auth'])->group(function(){
 
     // commandes
     Route::prefix('commandes')->name('commande.')->group(function(){
+
+        Route::get('/print',[CommandeController::class,'printCommande'])->name('printCommande');
+
         Route::get('/',[CommandeController::class,'index'])->name('index');
         Route::get('/api',[CommandeController::class,'indexApi'])->name('indexApi');
         Route::get('/create',[CommandeController::class,'create'])->name('create');
@@ -47,9 +53,10 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/{commande}/vetements',[CommandeController::class,'vetements'])->name('vetements');
         Route::delete('/{commande}/vetement/{vetement}',[CommandeController::class,'vetementDelete'])->name('vetementDelete');
         Route::post('/{commande}/payer',[CommandeController::class,'payer'])->name('payer');
-        
+
         Route::get('/vetements/api',[CommandeController::class,'vetementTypeApi'])->name('vetementTypeApi');
         Route::post('/vetements',[CommandeController::class,'vetementStore'])->name('vetementStore');
         Route::get('/{commande}/api',[CommandeController::class,'showApi'])->name('show');
     });
+
 });
