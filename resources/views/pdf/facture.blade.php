@@ -420,6 +420,13 @@
             transform: translateY(0.6rem);
             padding: 0 1rem;
         }
+        .montant{
+            background: rgb(21, 183, 183);
+            padding: .4rem 1rem;
+            border-radius: 1rem;
+            color: #fff;
+
+        }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -433,10 +440,45 @@
             <span class="pl-3">pressing</span>
         </blockquote>
     </h1>
-    <h3 style='text-decoration:underline; text-transform:uppercase;' class='text-center'>Facture|
-        {{ now() }}</h3>
-
+    <h3 style='text-decoration:underline; text-transform:uppercase;' class='text-center'>Facture de |
+        <span class="font-bold">{{ $commande->client->nom }}</span> <span class="class="font-bold"">{{ $commande->client->prenom }}</span></h3>
+    <div class="text-center">
+        {{ \Carbon\Carbon::now()->format('d M Y à H:i') }}
+    </div>
     
+        <table class="min-w-full divide-y divide-gray-200" style="width: 100%">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Quantité
+                    </th>
+                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Prix unitaite
+                    </th>
+                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        type de vêtement
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                @foreach ($commande->vetements as $key => $vetement)
+                    <tr class="{{ $key % 2 === 0 ? '' : 'bg-gray-50' }}">
+                        <td class="p-4 text-sm font-normal text-gray-900">
+                            {{ $vetement->quantite }}
+                        </td>
+                        <td class="p-4 text-sm font-normal text-gray-900">
+                            {{ number_format($vetement->prix_unitaire,0,',','  ') }} F
+                        </td>
+                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
+                            {{ $vetement->typeVetement->name }}
+                        </td>
+                    </tr>
+                @endforeach
+
+            </tbody>
+
+        </table>
+        <h1>TOTAL : <span class="montant">{{ number_format($commande->cout_total,0,',','  ') }} FCFA</span></h1>
 </body>
 
 </html>

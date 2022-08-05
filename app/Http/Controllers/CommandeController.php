@@ -245,4 +245,14 @@ class CommandeController extends Controller
 
         return $pdf->stream();
     }
+
+    public function printFacture(Commande $commande){
+        $pdf = App::make('dompdf.wrapper');
+
+        $pdf->loadView('pdf.facture', compact(
+            'commande'
+        ));
+
+        return $pdf->stream();
+    }
 }
