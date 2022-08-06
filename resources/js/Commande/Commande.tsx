@@ -46,6 +46,8 @@ const Commande : FC<CommandeType> = ({id}) => {
   const [dateLivraison,setdateLivraison] = useState('');
   const [commandeState,setCommandeState] = useState<any>(null);
   const [description,setDescription] = useState<string|null>(null);
+  const [calculTotalValue,setCalculTotalValue] = useState(0);
+  const [calculTotalVetementValue,setCalculTotalVetementValue] = useState(0);
 
   const [addNewClientState,setAddNewClientState] = useState(false);
 
@@ -222,6 +224,8 @@ const Commande : FC<CommandeType> = ({id}) => {
   
   useEffect(() => {
     calculTotal();
+    setCalculTotalValue(calculTotal());
+    setCalculTotalVetementValue(calculTotalVetement());
     calculTotalVetement();
   },[vetements]);
 
@@ -249,7 +253,7 @@ const Commande : FC<CommandeType> = ({id}) => {
           <span className='mb-3 mt-10 inline-block'></span>
 
           <div className="flex justify-between items-center pt-1 pb-2">
-            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | {calculTotalVetement()}</h1>
+            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | {calculTotalVetementValue}</h1>
             <button onClick={() => addVetement()} className='px-3 py-1 rounded-md bg-gray-600 text-white'>Ajouter</button>
           </div>
 
@@ -305,7 +309,7 @@ const Commande : FC<CommandeType> = ({id}) => {
           )}
           
           <div className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
-            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotal().toString())}</span>
+            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotalValue.toString())}</span>
           </div>
 
           <div className="text-center mb-4 mt-6">
