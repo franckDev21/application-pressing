@@ -21,6 +21,7 @@ class ProduitFactory extends Factory
             'nom' => $this->faker->word,
             'quantite' => rand(1,50),
             'unite'  => ['L','KG','G'][rand(0,2)],
+            'prix_achat' => rand(1000,100000),
             'fournisseur_id' => Fournisseur::inRandomOrder()->first()->id
         ];
     }
