@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useEffect, useState } from 'react'
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 import './index.scss';
 import axios from 'axios';
 import FormClient from '../FormClient/FormClient';
@@ -52,6 +52,8 @@ const Commande : FC<CommandeType> = ({id}) => {
 
   const [showAddClient,setShowAddClient] = useState(false);
   const [load,setLoad] = useState(false);
+
+  const totalRef = useRef<HTMLDivElement>(null);
 
   const addVetement = () => {
     const vetement: VetementModel = {
@@ -215,6 +217,11 @@ const Commande : FC<CommandeType> = ({id}) => {
 
     calculTotal([...tabVetements]);
     calculTotalVetement([...tabVetements]);
+
+    if(totalRef.current){
+      console.log(totalRef.current);
+      
+    }
   }
 
   useEffect(() => {
@@ -232,7 +239,7 @@ const Commande : FC<CommandeType> = ({id}) => {
         initCommande(res.data.commande,res.data.vetements,res.data.date_format);
       }).catch(err => console.log(err));
     }
-
+    
   },[]);
 
   useEffect(() => {
@@ -325,7 +332,7 @@ const Commande : FC<CommandeType> = ({id}) => {
             <div className='px-4 text-center py-3 bg-gray-100 rounded-md text-gray-400 font-semibold'>Aucun vêtement , cliquez sur le bouton "Ajouter" </div>
           )}
           
-          <div className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
+          <div ref={totalRef} className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
             TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotal().toString())}</span>
           </div>
 
