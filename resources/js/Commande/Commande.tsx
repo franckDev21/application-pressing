@@ -255,7 +255,6 @@ const Commande : FC<CommandeType> = ({id}) => {
   useEffect(() => {
     calculTotal();
     calculTotalVetement();
-    (totalRef.current as HTMLElement).innerText = `${format_number(calculTotal().toString())}`
   },[vetements]);
 
 
