@@ -99,13 +99,21 @@ const Commande : FC<CommandeType> = ({id}) => {
     setVetements([...copiVetements,(vetement as VetementModel)]);
   }
 
-  const calculTotal = ():number => {
+  const calculTotal = (Tabvetements ?: VetementModel[]):number => {
     let somme:number = 0;
-    vetements.forEach(vetement => {
-      if((vetement.action || '') !== 'delete'){
-        somme += multiplication(vetement.qte,vetement.prix_unitaire);
-      }
-    });
+    if(Tabvetements){
+      Tabvetements.forEach(vetement => {
+        if((vetement.action || '') !== 'delete'){
+          somme += multiplication(vetement.qte,vetement.prix_unitaire);
+        }
+      });
+    }else{
+      vetements.forEach(vetement => {
+        if((vetement.action || '') !== 'delete'){
+          somme += multiplication(vetement.qte,vetement.prix_unitaire);
+        }
+      });
+    }
     return somme;
   }
 
@@ -196,7 +204,7 @@ const Commande : FC<CommandeType> = ({id}) => {
     });
 
     setVetements([...tabVetements]);
-    setCalculTotalValue(calculTotal());
+    setCalculTotalValue(calculTotal(tabVetements));
     setCalculTotalVetementValue(calculTotalVetement());
   }
 
