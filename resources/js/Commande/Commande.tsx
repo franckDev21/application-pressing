@@ -187,7 +187,7 @@ const Commande : FC<CommandeType> = ({id}) => {
       axios.patch(`https://clear-pressing.herokuapp.com/commandes/${id}`,data_commande).then(res => {
         setLoad(false);
         if(res.data.message === 'success'){
-          (window.location as any) = '/commandes';
+          (window.location as any) = `/commandes/${id}`;
         }
       }).catch(err => {
         console.log(err); 
@@ -199,6 +199,8 @@ const Commande : FC<CommandeType> = ({id}) => {
   }
 
   const initCommande = (commande : CommandeModel,vetements: any[],date : string) => {
+    console.log('--- init ---');
+    
     setdateLivraison(date);
     setClientId(commande.client_id.toString());
     setDescription(commande.description);
@@ -220,11 +222,11 @@ const Commande : FC<CommandeType> = ({id}) => {
     calculTotalVetement([...tabVetements]);
 
     if(totalRef.current){
-      totalRef.current.innerHTML = `${calculTotal([...tabVetements])}`
+      totalRef.current.innerText = `${calculTotal([...tabVetements])}`
     }
 
     if(totalVetementRef.current){
-      totalVetementRef.current.innerHTML = `${calculTotalVetement([...tabVetements])}`
+      totalVetementRef.current.innerText = `${calculTotalVetement([...tabVetements])}`
     }
   }
 
