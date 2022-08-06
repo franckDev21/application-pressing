@@ -196,6 +196,8 @@ const Commande : FC<CommandeType> = ({id}) => {
     });
 
     setVetements([...tabVetements]);
+    setCalculTotalValue(calculTotal());
+    setCalculTotalVetementValue(calculTotalVetement());
   }
 
   useEffect(() => {
@@ -227,6 +229,8 @@ const Commande : FC<CommandeType> = ({id}) => {
   useEffect(() => {
     setCalculTotalValue(calculTotal());
     setCalculTotalVetementValue(calculTotalVetement());
+    calculTotalVetement()
+    calculTotal()
   },[vetements]);
 
 
