@@ -4,5 +4,7 @@
  * @returns 
  */
 export const format_number = (nombre : string): string => {
+  console.log('Nombre : ',nombre);
+  
   return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'XAF' }).format(parseInt(nombre,10) || 0);
 }
