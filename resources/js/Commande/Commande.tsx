@@ -158,7 +158,7 @@ const Commande : FC<CommandeType> = ({id}) => {
       
       setLoad(true);
   
-      axios.post('https://clear-pressing.herokuapp.com/commandes',data).then(res => {
+      axios.post('http://localhost:8000/commandes',data).then(res => {
         setLoad(false);
         if(res.data.success){
           let id = +res.data.commande_id;
@@ -184,7 +184,7 @@ const Commande : FC<CommandeType> = ({id}) => {
         vetements
       }
       
-      axios.patch(`https://clear-pressing.herokuapp.com/commandes/${id}`,data_commande).then(res => {
+      axios.patch(`http://localhost:8000/commandes/${id}`,data_commande).then(res => {
         setLoad(false);
         if(res.data.message === 'success'){
           (window.location as any) = `/commandes/${id}`;
@@ -229,16 +229,16 @@ const Commande : FC<CommandeType> = ({id}) => {
   }
 
   useEffect(() => {
-    axios.get('https://clear-pressing.herokuapp.com/clients/api').then(res => {
+    axios.get('http://localhost:8000/clients/api').then(res => {
       setClients(res.data);
     }).catch(err => console.log(err));
 
-    axios.get('https://clear-pressing.herokuapp.com/commandes/vetements/api').then(res => {
+    axios.get('http://localhost:8000/commandes/vetements/api').then(res => {
       setVetementTypes(res.data);
     }).catch(err => console.log(err));
 
     if(id){
-      axios.get(`https://clear-pressing.herokuapp.com/commandes/${id}/api`).then(res => {
+      axios.get(`http://localhost:8000/commandes/${id}/api`).then(res => {
         setCommandeState(res.data.commande);
         initCommande(res.data.commande,res.data.vetements,res.data.date_format);
       }).catch(err => console.log(err));
@@ -247,7 +247,7 @@ const Commande : FC<CommandeType> = ({id}) => {
   },[]);
 
   useEffect(() => {
-    axios.get('https://clear-pressing.herokuapp.com/clients/api').then(res => {
+    axios.get('http://localhost:8000/clients/api').then(res => {
       setClients(res.data);
     }).catch(err => console.log(err));
   },[addNewClientState]);
