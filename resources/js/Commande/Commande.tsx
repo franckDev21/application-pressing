@@ -22,7 +22,8 @@ type VetementModel = {
   id: number,
   qte : number,
   prix_unitaire : number,
-  type_vetement_id : number | null
+  type_vetement_id : number | null,
+  action ?: string
 }
 
 type CommandeModel = {
@@ -57,7 +58,8 @@ const Commande : FC<CommandeType> = ({id}) => {
       id : Date.now(),
       qte : 0,
       prix_unitaire : 0,
-      type_vetement_id : (vetementTypes[0] as any).id
+      type_vetement_id : (vetementTypes[0] as any).id,
+      action : 'add'
     }
 
     setVetements([...vetements,vetement]);
@@ -88,14 +90,19 @@ const Commande : FC<CommandeType> = ({id}) => {
   }
 
   const deleteVetement = (id: number) => {
+    let vetement = vetements.find(el => el.id === id);
+    (vetement as VetementModel).action = 'delete';
+    
     let copiVetements = vetements.filter(el => el.id !== id);
-    setVetements(copiVetements);
+    setVetements([...copiVetements,(vetement as VetementModel)]);
   }
 
   const calculTotal = ():number => {
     let somme:number = 0;
     vetements.forEach(vetement => {
-      somme += multiplication(vetement.qte,vetement.prix_unitaire);
+      if((vetement.action || '') !== 'delete'){
+        somme += multiplication(vetement.qte,vetement.prix_unitaire);
+      }
     });
     return somme;
   }
@@ -103,7 +110,9 @@ const Commande : FC<CommandeType> = ({id}) => {
   const calculTotalVetement = ():number => {
     let somme:number = 0;
     vetements.forEach(vetement => {
-      somme += (parseInt(vetement.qte.toString(),10) || 0);
+      if((vetement.action || '') !== 'delete'){
+        somme += (parseInt(vetement.qte.toString(),10) || 0);
+      }
     });
     return somme;
   }
@@ -113,6 +122,7 @@ const Commande : FC<CommandeType> = ({id}) => {
   }
 
   const handleSubmitForm = () => {
+    
     // store
     if(!id){
       const data = {
@@ -124,10 +134,10 @@ const Commande : FC<CommandeType> = ({id}) => {
         },
         vetements
       }
-  
+      
       setLoad(true);
   
-      axios.post('https://clear-pressing.herokuapp.com/commandes',data).then(res => {
+      axios.post('http://localhost:8000/commandes',data).then(res => {
         setLoad(false);
         if(res.data.success){
           let id = +res.data.commande_id;
@@ -152,12 +162,11 @@ const Commande : FC<CommandeType> = ({id}) => {
         },
         vetements
       }
-
-      axios.patch(`https://clear-pressing.herokuapp.com/commandes/${id}`,data_commande).then(res => {
+      
+      axios.patch(`http://localhost:8000/commandes/${id}`,data_commande).then(res => {
         setLoad(false);
-        console.log(res.data);
-        if(res.data === 'success'){
-          (window.location as any) = '/commandes'
+        if(res.data.message === 'success'){
+          (window.location as any) = '/commandes';
         }
       }).catch(err => {
         console.log(err); 
@@ -188,16 +197,16 @@ const Commande : FC<CommandeType> = ({id}) => {
   }
 
   useEffect(() => {
-    axios.get('https://clear-pressing.herokuapp.com/clients/api').then(res => {
+    axios.get('http://localhost:8000/clients/api').then(res => {
       setClients(res.data);
     }).catch(err => console.log(err));
 
-    axios.get('https://clear-pressing.herokuapp.com/commandes/vetements/api').then(res => {
+    axios.get('http://localhost:8000/commandes/vetements/api').then(res => {
       setVetementTypes(res.data);
     }).catch(err => console.log(err));
 
     if(id){
-      axios.get(`https://clear-pressing.herokuapp.com/commandes/${id}/api`).then(res => {
+      axios.get(`http://localhost:8000/commandes/${id}/api`).then(res => {
         setCommandeState(res.data.commande);
         initCommande(res.data.commande,res.data.vetements,res.data.date_format);
       }).catch(err => console.log(err));
@@ -206,7 +215,7 @@ const Commande : FC<CommandeType> = ({id}) => {
   },[]);
 
   useEffect(() => {
-    axios.get('https://clear-pressing.herokuapp.com/clients/api').then(res => {
+    axios.get('http://localhost:8000/clients/api').then(res => {
       setClients(res.data);
     }).catch(err => console.log(err));
   },[addNewClientState]);
@@ -264,26 +273,30 @@ const Commande : FC<CommandeType> = ({id}) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white text-gray-600">
-                  {vetements.map(vetement => (
-                    <tr key={vetement.id}>
-                      <td className="p-4 whitespace-nowrap text-sm font-normal">
-                        <input onChange={(e) => updateVetement(e,'QTE',vetement.id)} type="number" min={0} value={vetement.qte} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md' />
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                        <input onChange={(e) => updateVetement(e,'PRIX',vetement.id)} type="number" min={0} value={vetement.prix_unitaire} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md' />
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-sm font-semibold">
-                        <select onChange={(e) => updateVetement(e,'TYPE',vetement.id)} value={vetement.type_vetement_id || ''} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md'>
-                          {vetementTypes.map((type :any) => (
-                            <option key={type.id} value={type.id}>{type.name}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td>
-                        <span onClick={() => deleteVetement(vetement.id)} className='bg-red-400 text-sm cursor-pointer pb-1 w-5 h-5 rounded-lg inline-flex justify-center items-center font-extrabold text-white'>-</span>
-                      </td>
-                    </tr>
-                  ))}
+                  {vetements.map(vetement => {
+                    if(vetement?.action !== 'delete'){
+                      return (
+                        <tr key={vetement.id}>
+                          <td className="p-4 whitespace-nowrap text-sm font-normal">
+                            <input onChange={(e) => updateVetement(e,'QTE',vetement.id)} type="number" min={0} value={vetement.qte} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md' />
+                          </td>
+                          <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
+                            <input onChange={(e) => updateVetement(e,'PRIX',vetement.id)} type="number" min={0} value={vetement.prix_unitaire} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md' />
+                          </td>
+                          <td className="p-4 whitespace-nowrap text-sm font-semibold">
+                            <select onChange={(e) => updateVetement(e,'TYPE',vetement.id)} value={vetement.type_vetement_id || ''} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md'>
+                              {vetementTypes.map((type :any) => (
+                                <option key={type.id} value={type.id}>{type.name}</option>
+                              ))}
+                            </select>
+                          </td>
+                          <td>
+                            <span onClick={() => deleteVetement(vetement.id)} className='bg-red-400 text-sm cursor-pointer pb-1 w-5 h-5 rounded-lg inline-flex justify-center items-center font-extrabold text-white'>-</span>
+                          </td>
+                        </tr>
+                      )
+                    }
+                  })}
                 </tbody>
               </table>
             </>

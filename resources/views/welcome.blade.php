@@ -39,7 +39,7 @@
 
             <blockquote class="font-semibold italic text-center text-5xl text-slate-900">
                 <span class="before:block before:absolute before:-inset-2 before:-skew-y-3 before:bg-cyan-500 relative inline-block">
-                  <span class="relative text-white pr-2 pl-1">Clear</span>
+                  <span class="relative text-white pr-2 pl-1">clean</span>
                 </span>
                 pressing
               </blockquote>

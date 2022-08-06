@@ -129,12 +129,14 @@ class CommandeController extends Controller
         // on sauvegarder les vêtements de la commande
         foreach($request->vetements as $vetement){
             if($vetement['qte'] !== 0 && $vetement['prix_unitaire'] !== 0){
-                Vetement::create([
-                    'type_vetement_id' => $vetement['type_vetement_id'],
-                    'commande_id' => $commande->id,
-                    'quantite' => $vetement['qte'],
-                    'prix_unitaire' => $vetement['prix_unitaire']
-                ]);
+                if(isset($vetement['action']) && $vetement['action'] !== 'delete'){
+                    Vetement::create([
+                        'type_vetement_id' => $vetement['type_vetement_id'],
+                        'commande_id' => $commande->id,
+                        'quantite' => $vetement['qte'],
+                        'prix_unitaire' => $vetement['prix_unitaire']
+                    ]);
+                }
             }
         }
 
@@ -201,12 +203,16 @@ class CommandeController extends Controller
             $vetementDB = Vetement::find($vetement['id']);
 
             if($vetement['qte'] !== 0 && $vetement['prix_unitaire'] !== 0){
-                if($vetementDB){ // si oui on le modifie
-                    $vetementDB->update([
-                        'quantite' => $vetement['qte'],
-                        'prix_unitaire' => $vetement['prix_unitaire'],
-                        'type_vetement_id' => $vetement['type_vetement_id']
-                    ]);
+                if($vetementDB){ // si oui on le modifie ou on supprime
+                    if(isset($vetement['action']) && $vetement['action'] === 'delete'){
+                        $vetementDB->delete();
+                    }else{
+                        $vetementDB->update([
+                            'quantite' => $vetement['qte'],
+                            'prix_unitaire' => $vetement['prix_unitaire'],
+                            'type_vetement_id' => $vetement['type_vetement_id']
+                        ]);
+                    }
                 }else{ // sinon en l'enregistre
                     Vetement::create([
                         'type_vetement_id' => $vetement['type_vetement_id'],
@@ -219,7 +225,11 @@ class CommandeController extends Controller
             
         }
 
-        return response()->json('success');
+        return response()->json([
+            'commande' => $commande,
+            'vetements' => $commande->vetements,
+            'message' => 'success'
+        ]);
     }
 
     /**
