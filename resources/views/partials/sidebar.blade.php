@@ -59,12 +59,27 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="https://demo.themesberg.com/windster/users/list/"
-                            class="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ">
+                    <li x-data="{ open: false }" class="cursor-pointer">
+                        <span @click="open = ! open"
+                            class="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group {{ request()->routeIs('fournisseur.index') || request()->routeIs('fournisseur.create') ? 'bg-gray-100':'' }}">
                             <i class="las la-store-alt text-3xl"></i>
                             <span class="ml-3 flex-1 whitespace-nowrap">Stock</span>
-                        </a>
+                            
+                        </span>
+                        <ul x-show="open" class="-mt-2 pt-1 rounded-md bg-gray-100 pb-2">
+                            <li  class="flex mt-2 items-center justify-between pl-5 w-full">
+                                <i class="las la-atom text-2xl""></i>
+                                <a href="{{ route('commande.index') }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 {{ request()->routeIs('commande.index') ? 'bg-white':'' }}" >Produit en stock</a>
+                            </li>
+                            <li  class="flex mt-2 items-center justify-between pl-5 w-full">
+                                <i class="las la-clipboard-list text-2xl"></i>
+                                <a href="{{ route('commande.create') }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 {{ request()->routeIs('commande.create') ? 'bg-white':'' }}" >Historique produit</a>
+                            </li>
+                            <li  class="flex mt-2 items-center justify-between pl-5 w-full">
+                                <i class="las la-people-carry text-2xl"></i>
+                                <a href="{{ route('fournisseur.index') }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 {{ request()->routeIs('fournisseur.index') ? 'bg-white':'' }}" >Fournisseurs</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="https://demo.themesberg.com/windster/e-commerce/products/"

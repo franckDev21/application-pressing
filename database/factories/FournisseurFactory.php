@@ -18,7 +18,7 @@ class FournisseurFactory extends Factory
     {
         return [
             'nom' => $this->faker->lastName,
-            'prenom' => $this->faker->firstName,
+            'address' => $this->faker->address,
             'email' => $this->faker->email,
             'tel' => $this->faker->phoneNumber
         ];

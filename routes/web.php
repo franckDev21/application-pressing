@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\FournisseurController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +32,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/',[ClientController::class,'index'])->name('index');
         Route::get('/create',[ClientController::class,'create'])->name('create');
         Route::post('/',[ClientController::class,'store'])->name('store');
-        Route::get('/{client}',[ClientController::class,'edit'])->name('edit');
+        Route::get('/{client:nom}',[ClientController::class,'edit'])->name('edit');
         Route::patch('/{client}',[ClientController::class,'update'])->name('update');
         Route::delete('/{client}',[ClientController::class,'destroy'])->name('destroy');
 
@@ -60,4 +61,16 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/{commande}/api',[CommandeController::class,'showApi'])->name('show');
     });
 
+    // fournisseurs
+    Route::prefix('fournisseur')->name('fournisseur.')->group(function(){
+
+        Route::get('/print',[FournisseurController::class,'printFournisseur'])->name('printFournisseur');
+        Route::get('/',[FournisseurController::class,'index'])->name('index');
+        Route::get('/create',[FournisseurController::class,'create'])->name('create');
+        Route::post('/',[FournisseurController::class,'store'])->name('store');
+        Route::get('/{fournisseur:nom}/edit',[FournisseurController::class,'edit'])->name('edit');
+        Route::patch('/{fournisseur}',[FournisseurController::class,'update'])->name('update');
+        Route::delete('/{fournisseur}',[FournisseurController::class,'destroy'])->name('delete');
+
+    });
 });

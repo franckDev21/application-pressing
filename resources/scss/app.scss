@@ -37,3 +37,11 @@ body{
   }
 }
 
+.td-address{
+  max-width: 200px;
+  overflow-x:scroll;
+  &::-webkit-scrollbar{
+    width: 0;
+  }
+  transform: translateY(.6rem);
+}
