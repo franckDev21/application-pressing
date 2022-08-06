@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function(){
     Route::prefix('commandes')->name('commande.')->group(function(){
 
         Route::get('/print',[CommandeController::class,'printCommande'])->name('printCommande');
-        Route::get('/{commande}/print/facture',[CommandeController::class,'printFacture'])->name('printFacture');
+        Route::get('/{commande}/print/{client}/facture',[CommandeController::class,'printFacture'])->name('printFacture');
 
         Route::get('/',[CommandeController::class,'index'])->name('index');
         Route::get('/api',[CommandeController::class,'indexApi'])->name('indexApi');

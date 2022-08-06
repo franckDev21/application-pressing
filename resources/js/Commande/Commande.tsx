@@ -199,8 +199,6 @@ const Commande : FC<CommandeType> = ({id}) => {
   }
 
   const initCommande = (commande : CommandeModel,vetements: any[],date : string) => {
-    console.log('--- init ---');
-    
     setdateLivraison(date);
     setClientId(commande.client_id.toString());
     setDescription(commande.description);

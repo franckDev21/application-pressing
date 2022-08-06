@@ -6,7 +6,7 @@
     </h1>
 
     <div>
-      <a href="{{ route('commande.printFacture',$commande) }}"  target="_blank"  class="px-4 rounded-md bg-gray-500 text-white py-1 border-4 uppercase font-bold hover:bg-gray-600 transition-all active:scale-[.90] border-gray-600">Imprimer le reçu</a>
+      <a href="{{ route('commande.printFacture',[$commande,$commande->client]) }}"  target="_blank"  class="px-4 rounded-md bg-gray-500 text-white py-1 border-4 uppercase font-bold hover:bg-gray-600 transition-all active:scale-[.90] border-gray-600">Imprimer le reçu</a>
       @if ($commande->etat !== 'SOLDER')
         <form action="{{ route('commande.payer',$commande) }}" method="post" class="inline">
           @csrf

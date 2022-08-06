@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CommandeResource;
-use App\Http\Resources\CommandeRessourceEdit;
+use App\Jobs\FactureMailJob;
+use App\Models\Client;
 use App\Models\Commande;
 use App\Models\TypeVetement;
 use App\Models\Vetement;
-use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
@@ -256,7 +255,11 @@ class CommandeController extends Controller
         return $pdf->stream();
     }
 
-    public function printFacture(Commande $commande){
+    public function printFacture(Commande $commande,Client $client){
+
+        // send mail
+        FactureMailJob::dispatch($commande,$client);
+
         $pdf = App::make('dompdf.wrapper');
 
         $pdf->loadView('pdf.facture', compact(
