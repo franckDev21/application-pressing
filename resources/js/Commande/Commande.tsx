@@ -46,8 +46,6 @@ const Commande : FC<CommandeType> = ({id}) => {
   const [dateLivraison,setdateLivraison] = useState('');
   const [commandeState,setCommandeState] = useState<any>(null);
   const [description,setDescription] = useState<string|null>(null);
-  const [calculTotalValue,setCalculTotalValue] = useState(0);
-  const [calculTotalVetementValue,setCalculTotalVetementValue] = useState(0);
 
   const [addNewClientState,setAddNewClientState] = useState(false);
 
@@ -99,21 +97,13 @@ const Commande : FC<CommandeType> = ({id}) => {
     setVetements([...copiVetements,(vetement as VetementModel)]);
   }
 
-  const calculTotal = (Tabvetements ?: VetementModel[]):number => {
+  const calculTotal = ():number => {
     let somme:number = 0;
-    if(Tabvetements){
-      Tabvetements.forEach(vetement => {
-        if((vetement.action || '') !== 'delete'){
-          somme += multiplication(vetement.qte,vetement.prix_unitaire);
-        }
-      });
-    }else{
-      vetements.forEach(vetement => {
-        if((vetement.action || '') !== 'delete'){
-          somme += multiplication(vetement.qte,vetement.prix_unitaire);
-        }
-      });
-    }
+    vetements.forEach(vetement => {
+      if((vetement.action || '') !== 'delete'){
+        somme += multiplication(vetement.qte,vetement.prix_unitaire);
+      }
+    });
     return somme;
   }
 
@@ -204,8 +194,6 @@ const Commande : FC<CommandeType> = ({id}) => {
     });
 
     setVetements([...tabVetements]);
-    setCalculTotalValue(calculTotal(tabVetements));
-    setCalculTotalVetementValue(calculTotalVetement());
   }
 
   useEffect(() => {
@@ -217,16 +205,14 @@ const Commande : FC<CommandeType> = ({id}) => {
       setVetementTypes(res.data);
     }).catch(err => console.log(err));
 
-  },[]);
-
-  useEffect(() => {
     if(id){
       axios.get(`https://clear-pressing.herokuapp.com/commandes/${id}/api`).then(res => {
         setCommandeState(res.data.commande);
         initCommande(res.data.commande,res.data.vetements,res.data.date_format);
       }).catch(err => console.log(err));
     }
-  },[id]);
+
+  },[]);
 
   useEffect(() => {
     axios.get('https://clear-pressing.herokuapp.com/clients/api').then(res => {
@@ -235,10 +221,8 @@ const Commande : FC<CommandeType> = ({id}) => {
   },[addNewClientState]);
   
   useEffect(() => {
-    setCalculTotalValue(calculTotal());
-    setCalculTotalVetementValue(calculTotalVetement());
-    calculTotalVetement()
-    calculTotal()
+    calculTotal();
+    calculTotalVetement();
   },[vetements]);
 
 
@@ -321,7 +305,7 @@ const Commande : FC<CommandeType> = ({id}) => {
           )}
           
           <div className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
-            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotalValue.toString())}</span>
+            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotal().toString())}</span>
           </div>
 
           <div className="text-center mb-4 mt-6">
