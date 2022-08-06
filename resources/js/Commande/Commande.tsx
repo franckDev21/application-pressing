@@ -257,7 +257,7 @@ const Commande : FC<CommandeType> = ({id}) => {
           <span className='mb-3 mt-10 inline-block'></span>
 
           <div className="flex justify-between items-center pt-1 pb-2">
-            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | {calculTotalVetementValue}</h1>
+            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | {calculTotalVetement()}</h1>
             <button onClick={() => addVetement()} className='px-3 py-1 rounded-md bg-gray-600 text-white'>Ajouter</button>
           </div>
 
