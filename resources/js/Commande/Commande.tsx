@@ -207,14 +207,18 @@ const Commande : FC<CommandeType> = ({id}) => {
       setVetementTypes(res.data);
     }).catch(err => console.log(err));
 
+  },[]);
+
+  useEffect(() => {
     if(id){
       axios.get(`https://clear-pressing.herokuapp.com/commandes/${id}/api`).then(res => {
         setCommandeState(res.data.commande);
         initCommande(res.data.commande,res.data.vetements,res.data.date_format);
       }).catch(err => console.log(err));
     }
-
-  },[]);
+    setCalculTotalValue(calculTotal());
+    setCalculTotalVetementValue(calculTotalVetement());
+  },[id]);
 
   useEffect(() => {
     axios.get('https://clear-pressing.herokuapp.com/clients/api').then(res => {
