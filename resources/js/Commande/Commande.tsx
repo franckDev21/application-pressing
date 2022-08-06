@@ -53,7 +53,7 @@ const Commande : FC<CommandeType> = ({id}) => {
   const [showAddClient,setShowAddClient] = useState(false);
   const [load,setLoad] = useState(false);
 
-  const totalRef = useRef<HTMLDivElement>(null);
+  const totalRef = useRef<HTMLElement>(null);
 
   const addVetement = () => {
     const vetement: VetementModel = {
@@ -219,8 +219,7 @@ const Commande : FC<CommandeType> = ({id}) => {
     calculTotalVetement([...tabVetements]);
 
     if(totalRef.current){
-      console.log(totalRef.current.classList.add(`$_${calculTotal([...tabVetements])}`));
-      
+      totalRef.current.innerHTML = `${calculTotal([...tabVetements])}`
     }
   }
 
@@ -251,6 +250,7 @@ const Commande : FC<CommandeType> = ({id}) => {
   useEffect(() => {
     calculTotal();
     calculTotalVetement();
+    (totalRef.current as HTMLElement).innerText = `${format_number(calculTotal().toString())}`
   },[vetements]);
 
 
@@ -332,8 +332,8 @@ const Commande : FC<CommandeType> = ({id}) => {
             <div className='px-4 text-center py-3 bg-gray-100 rounded-md text-gray-400 font-semibold'>Aucun vêtement , cliquez sur le bouton "Ajouter" </div>
           )}
           
-          <div ref={totalRef} className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
-            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotal().toString())}</span>
+          <div  className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
+            TOTAL &nbsp; <span ref={totalRef} className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotal().toString())}</span>
           </div>
 
           <div className="text-center mb-4 mt-6">
