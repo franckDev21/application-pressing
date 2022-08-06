@@ -219,7 +219,7 @@ const Commande : FC<CommandeType> = ({id}) => {
     calculTotalVetement([...tabVetements]);
 
     if(totalRef.current){
-      console.log(totalRef.current);
+      console.log(totalRef.current.classList.add(`$_${calculTotal([...tabVetements])}`));
       
     }
   }
