@@ -97,23 +97,41 @@ const Commande : FC<CommandeType> = ({id}) => {
     setVetements([...copiVetements,(vetement as VetementModel)]);
   }
 
-  const calculTotal = ():number => {
+  const calculTotal = (tabVetements ?: VetementModel[]):number => {
     let somme:number = 0;
-    vetements.forEach(vetement => {
-      if((vetement.action || '') !== 'delete'){
-        somme += multiplication(vetement.qte,vetement.prix_unitaire);
-      }
-    });
+    if(tabVetements){
+      tabVetements.forEach(vetement => {
+        if((vetement.action || '') !== 'delete'){
+          somme += multiplication(vetement.qte,vetement.prix_unitaire);
+        }
+      });
+    }else{
+      vetements.forEach(vetement => {
+        if((vetement.action || '') !== 'delete'){
+          somme += multiplication(vetement.qte,vetement.prix_unitaire);
+        }
+      });
+    }
+    
     return somme;
   }
 
-  const calculTotalVetement = ():number => {
+  const calculTotalVetement = (tabVetements ?: VetementModel[]):number => {
     let somme:number = 0;
-    vetements.forEach(vetement => {
-      if((vetement.action || '') !== 'delete'){
-        somme += (parseInt(vetement.qte.toString(),10) || 0);
-      }
-    });
+    if(tabVetements){
+      tabVetements.forEach(vetement => {
+        if((vetement.action || '') !== 'delete'){
+          somme += (parseInt(vetement.qte.toString(),10) || 0);
+        }
+      });
+    }else{
+      vetements.forEach(vetement => {
+        if((vetement.action || '') !== 'delete'){
+          somme += (parseInt(vetement.qte.toString(),10) || 0);
+        }
+      });
+    }
+    
     return somme;
   }
 
@@ -194,6 +212,9 @@ const Commande : FC<CommandeType> = ({id}) => {
     });
 
     setVetements([...tabVetements]);
+
+    calculTotal([...tabVetements]);
+    calculTotalVetement([...tabVetements]);
   }
 
   useEffect(() => {
