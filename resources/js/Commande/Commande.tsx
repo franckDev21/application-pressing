@@ -54,6 +54,7 @@ const Commande : FC<CommandeType> = ({id}) => {
   const [load,setLoad] = useState(false);
 
   const totalRef = useRef<HTMLElement>(null);
+  const totalVetementRef = useRef<HTMLElement>(null);
 
   const addVetement = () => {
     const vetement: VetementModel = {
@@ -221,6 +222,10 @@ const Commande : FC<CommandeType> = ({id}) => {
     if(totalRef.current){
       totalRef.current.innerHTML = `${calculTotal([...tabVetements])}`
     }
+
+    if(totalVetementRef.current){
+      totalVetementRef.current.innerHTML = `${calculTotalVetement([...tabVetements])}`
+    }
   }
 
   useEffect(() => {
@@ -277,7 +282,7 @@ const Commande : FC<CommandeType> = ({id}) => {
           <span className='mb-3 mt-10 inline-block'></span>
 
           <div className="flex justify-between items-center pt-1 pb-2">
-            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | {calculTotalVetement()}</h1>
+            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | <span ref={totalVetementRef}>{calculTotalVetement()}</span></h1>
             <button onClick={() => addVetement()} className='px-3 py-1 rounded-md bg-gray-600 text-white'>Ajouter</button>
           </div>
 
