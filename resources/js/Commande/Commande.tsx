@@ -216,8 +216,6 @@ const Commande : FC<CommandeType> = ({id}) => {
         initCommande(res.data.commande,res.data.vetements,res.data.date_format);
       }).catch(err => console.log(err));
     }
-    setCalculTotalValue(calculTotal());
-    setCalculTotalVetementValue(calculTotalVetement());
   },[id]);
 
   useEffect(() => {
@@ -227,10 +225,8 @@ const Commande : FC<CommandeType> = ({id}) => {
   },[addNewClientState]);
   
   useEffect(() => {
-    calculTotal();
     setCalculTotalValue(calculTotal());
     setCalculTotalVetementValue(calculTotalVetement());
-    calculTotalVetement();
   },[vetements]);
 
 
