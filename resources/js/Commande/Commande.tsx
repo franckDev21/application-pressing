@@ -309,7 +309,7 @@ const Commande : FC<CommandeType> = ({id}) => {
           )}
           
           <div className='flex justify-end px-4 border-t pt-2 text-4xl items-center font-extrabold text-gray-500 '>
-            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{format_number(calculTotalValue.toString())}</span>
+            TOTAL &nbsp; <span className='px-4 inline-block text-gray-600 bg-cyan-400 rounded-md py-1'>{calculTotalValue.toString()}</span>
           </div>
 
           <div className="text-center mb-4 mt-6">
