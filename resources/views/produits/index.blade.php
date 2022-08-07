@@ -7,12 +7,15 @@
           <div class="p-3 rounded-md bg-green-100 text-green-400 text-2xl text-center font-extrabold">{{ session('success') }}</div>
       @endif
       
-      <div class="flex items-center justify-between">
-          <h1 class="text-2xl border-b pb-4 font-extrabold text-gray-500">
+      <div class="flex items-center justify-between pb-4">
+          <h1 class="text-2xl  font-extrabold text-gray-500">
               <span>#Liste des </span>
               <span class="text-cyan-500">produits</span>
           </h1>
-          <a href="{{ route('produit.printProduit') }}" target="_blank" class="px-4 rounded-md text-xs bg-gray-500 text-white py-1 border-4 uppercase font-bold hover:bg-gray-600 transition-all active:scale-[.90] border-gray-600">Imprimer la liste des produits <i class="las la-download text-sm text-white ml-1"></i></a>
+          <div class="flex">
+            <a href="{{ route('appro.index')  }}" class="px-4 rounded-md text-xs bg-green-500 text-white py-1 border-4 uppercase font-bold hover:bg-green-600 transition-all active:scale-[.90] border-green-600 mr-4">Historique produits <i class="las la-clock text-sm text-white ml-1"></i></a>
+            <a href="{{ route('produit.printProduit') }}" target="_blank" class="px-4 rounded-md text-xs bg-gray-500 text-white py-1 border-4 uppercase font-bold hover:bg-gray-600 transition-all active:scale-[.90] border-gray-600">Imprimer la liste des produits <i class="las la-download text-sm text-white ml-1"></i></a>
+          </div>
       </div>
 
       <table class="min-w-full divide-y divide-gray-200">
@@ -51,14 +54,15 @@
                           {{ $produit->unite }}
                       </td>
                       <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                          {{ $produit->prix_achat }}
+                          {{ number_format($produit->prix_achat, 0, ',', '  ') }} FCFA
                       </td>
                       <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-500">
                         <span class="text-gray-700">{{ $produit->fournisseur->nom }}</span> <br>
                         {{ $produit->fournisseur->email }} <br>
                       </td>
                       <td class="p-4 flex items-center justify-center">
-                          <a href="{{ route('produit.edit',$produit) }}" title="Edité {{ $produit->nom.' '.$produit->prenom }}" class="px-4 py-1 text-sm inline-block cursor-pointer rounded-md text-orange-500 bg-orange-100 mr-1">éditer</a>
+                        <a href="{{ route('appro.index') }}" class="px-4 py-1 text-sm inline-block cursor-pointer rounded-md text-white bg-gray-700 mr-1">page produit</a>
+                        <a href="{{ route('produit.edit',$produit) }}" title="Edité {{ $produit->nom.' '.$produit->prenom }}" class="px-4 py-1 text-sm inline-block cursor-pointer rounded-md text-orange-500 bg-orange-100 mr-1">éditer</a>
                           <form action="{{ route('produit.delete',$produit) }}" method="POST" class="inline">
                               @csrf
                               @method('DELETE')

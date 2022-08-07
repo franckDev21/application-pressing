@@ -3,10 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Approvisionement;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
-{
+{ 
     /**
      * Seed the application's database.
      *
@@ -27,7 +29,8 @@ class DatabaseSeeder extends Seeder
             TypeVetementSeeder::class,
             VetementSeeder::class,
             FournisseurSeeder::class,
-            ProduitSeeder::class
+            ProduitSeeder::class,
+            ApprovisionementSeeder::class
         ]);
     }
 }

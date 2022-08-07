@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovisionementController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\FournisseurController;
@@ -86,6 +87,15 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/{produit:nom}/edit',[ProduitController::class,'edit'])->name('edit');
         Route::patch('/{produit}',[ProduitController::class,'update'])->name('update');
         Route::delete('/{produit}',[ProduitController::class,'destroy'])->name('delete');
+
+    });
+
+     // produits
+     Route::prefix('approvionnement')->name('appro.')->group(function(){
+
+        Route::get('/',[ApprovisionementController::class,'index'])->name('index');
+        Route::post('/',[ApprovisionementController::class,'store'])->name('store');
+        Route::delete('/{approvisionement}',[ApprovisionementController::class,'destroy'])->name('delete');
 
     });
 });
