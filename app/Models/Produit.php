@@ -20,4 +20,8 @@ class Produit extends Model
     public function fournisseur(){
         return $this->belongsTo(Fournisseur::class);
     }
+
+    public function approvisionnements(){
+        return $this->hasMany(Approvisionement::class) ;
+    }
 }

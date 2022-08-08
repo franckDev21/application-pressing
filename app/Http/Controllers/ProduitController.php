@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Approvisionement;
 use App\Models\Fournisseur;
 use App\Models\Produit;
 use Illuminate\Http\Request;
@@ -61,7 +62,19 @@ class ProduitController extends Controller
      */
     public function show(Produit $produit)
     {
-        //
+        $totalApproEntrer = Approvisionement::where('type','ENTRER')
+            ->where('produit_id',$produit->id)
+            ->count();
+
+        $totalApproSortie = Approvisionement::where('type','SORTIR')
+            ->where('produit_id',$produit->id)
+            ->count();  
+
+        return view('produits.show',compact(
+            'produit',
+            'totalApproEntrer',
+            'totalApproSortie'
+        ));
     }
 
     /**

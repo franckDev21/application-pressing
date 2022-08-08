@@ -61,7 +61,7 @@
                         {{ $produit->fournisseur->email }} <br>
                       </td>
                       <td class="p-4 flex items-center justify-center">
-                        <a href="{{ route('appro.index') }}" class="px-4 py-1 text-sm inline-block cursor-pointer rounded-md text-white bg-gray-700 mr-1">page produit</a>
+                        <a href="{{ route('produit.show',$produit) }}" class="px-4 py-1 text-sm inline-block cursor-pointer rounded-md text-white bg-gray-700 mr-1">page produit</a>
                         <a href="{{ route('produit.edit',$produit) }}" title="Edité {{ $produit->nom.' '.$produit->prenom }}" class="px-4 py-1 text-sm inline-block cursor-pointer rounded-md text-orange-500 bg-orange-100 mr-1">éditer</a>
                           <form action="{{ route('produit.delete',$produit) }}" method="POST" class="inline">
                               @csrf

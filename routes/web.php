@@ -84,6 +84,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/',[ProduitController::class,'index'])->name('index');
         Route::get('/create',[ProduitController::class,'create'])->name('create');
         Route::post('/',[ProduitController::class,'store'])->name('store');
+        Route::get('/{produit:nom}/show',[ProduitController::class,'show'])->name('show');
         Route::get('/{produit:nom}/edit',[ProduitController::class,'edit'])->name('edit');
         Route::patch('/{produit}',[ProduitController::class,'update'])->name('update');
         Route::delete('/{produit}',[ProduitController::class,'destroy'])->name('delete');
