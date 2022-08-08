@@ -43,6 +43,9 @@
                     <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         produit
                     </th>
+                    <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Auteur
+                    </th>
                     <th scope="col" class="p-4 text-left  font-medium text-gray-500 uppercase tracking-wider">
 
                     </th>
@@ -67,6 +70,9 @@
                         </td>
                         <td class="p-4 uppercase whitespace-nowrap text-sm font-semibold text-gray-900">
                             {{ $approvisionnement->produit->nom }}
+                        </td>
+                        <td class="p-4 uppercase whitespace-nowrap text-sm font-semibold text-gray-900">
+                            {{ $approvisionnement->user->name }}
                         </td>
                         <td
                             class="p-4 {{ auth()->user()->is_admin === true ? '' : 'disabled' }} flex items-center justify-center">

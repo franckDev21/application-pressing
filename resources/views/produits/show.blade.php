@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between pb-4">
     <h1 class="text-2xl  font-extrabold text-gray-500">
         <span># page produit :  </span>
-        <a href="{{ route('produit.edit',$produit) }}" class="text-cyan-500 underline">{{ $produit->nom }}</a>
+        <a href="{{ route('produit.edit',$produit) }}" class="text-cyan-500 uppercase underline">{{ $produit->nom }}</a>
     </h1>
     <div class="flex">
       <a href="{{ route('appro.index')  }}" class="px-4 rounded-md text-xs bg-green-500 text-white py-1 border-4 uppercase font-bold hover:bg-green-600 transition-all active:scale-[.90] border-green-600 mr-4">Historique produits <i class="las la-clock text-sm text-white ml-1"></i></a>
@@ -16,7 +16,7 @@
       <span class="font-extrabold text-5xl text-green-500">{{ $produit->quantite }}</span>
     </div>
     <div class="bg-white shadow-md rounded-md px-3 py-4 text-center border-4 border-opacity-40 border-gray-500 shadow-white">
-      <h1 class="text-xl font-semibold text-gray-500 ">Prix d'achat</h1>
+      <h1 class="text-xl font-semibold text-gray-500 ">Dernier prix d'achat</h1>
       <span class="w-[40%] mx-auto block h-[1px] bg-gray-400 my-2 opacity-20"></span>
       <span class="font-extrabold text-5xl text-gray-500">{{ number_format($produit->prix_achat, 0, ',', '  ') }} FCFA</span>
     </div>
@@ -27,9 +27,17 @@
     </div>
   </div>
 
+  {{-- Modal add approvisionnement --}}
+  <x-modal-add-appro :produit="$produit" :produits="$produits" :edit="true" />
+  {{-- Modal add approvisionnement --}}
+
+  {{-- Modal add approvisionnement --}}
+  <x-modal-appro-sortie :produit="$produit"   />
+  {{-- Modal add approvisionnement --}}
+
   <div class="flex mt-4">
-    <a href="{{ route('appro.index')  }}" class="px-4 rounded-md text-xs bg-cyan-500 text-white py-1 border-4 uppercase font-bold hover:bg-cyan-600 transition-all active:scale-[.90] border-cyan-600 mr-4">Ajouter une entrer <i class="las la-clock text-sm text-white ml-1"></i></a>
-    <a href="{{ route('appro.index')  }}" class="px-4 rounded-md text-xs bg-red-500 text-white py-1 border-4 uppercase font-bold hover:bg-red-600 transition-all active:scale-[.90] border-red-600 mr-4">Ajouter une sortie <i class="las la-clock text-sm text-white ml-1"></i></a>
+    <a data-modal-toggle="add-user-modal"  class="px-4 rounded-md text-xs bg-cyan-500 text-white py-1 border-4 uppercase font-bold hover:bg-cyan-600 transition-all active:scale-[.90] border-cyan-600 mr-4">Ajouter une entrer <i class="las la-download text-sm text-white ml-1"></i></a>
+    <a data-modal-toggle="add-user-modal-2"   class="px-4 rounded-md text-xs bg-red-500 text-white py-1 border-4 uppercase font-bold hover:bg-red-600 transition-all active:scale-[.90] border-red-600 mr-4">Ajouter une sortie <i class="las la-upload text-sm text-white ml-1"></i></a>
   </div>
 
   <h1 class="text-xl pt-4 font-extrabold text-gray-500 mt-4">
@@ -53,7 +61,7 @@
                 type
             </th>
             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                produit
+              Auteur
             </th>
             <th scope="col" class="p-4 text-left  font-medium text-gray-500 uppercase tracking-wider">
 
@@ -69,7 +77,12 @@
                 </td>
                 <td
                     class="p-4 td-address font-semibold uppercase break-words whitespace-nowrap text-sm text-gray-900">
-                    {{ number_format($approvisionnement->prix_achat, 0, ',', '  ') }} fcfa
+                    @if ($approvisionnement->prix_achat)
+                      {{ number_format($approvisionnement->prix_achat, 0, ',', '  ') }} fcfa
+                    @else
+                        Aucun
+                    @endif
+                    
                 </td>
                 <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
                     {{ $approvisionnement->date->format('d M Y') }}
@@ -78,7 +91,7 @@
                     {{ $approvisionnement->type }}
                 </td>
                 <td class="p-4 uppercase whitespace-nowrap text-sm font-semibold text-gray-900">
-                    {{ $approvisionnement->produit->nom }}
+                  {{ $approvisionnement->user->name }}
                 </td>
                 <td
                     class="p-4 {{ auth()->user()->is_admin === true ? '' : 'disabled' }} flex items-center justify-center">

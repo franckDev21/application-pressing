@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('approvisionements', function (Blueprint $table) {
             $table->id();
             $table->integer('quantite');
-            $table->integer('prix_achat');
+            $table->integer('prix_achat')->nullable();
             $table->timestamp('date');
             $table->enum('type',['ENTRER','SORTIR','UPDATE'])->default('ENTRER');
             $table->foreignId('produit_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

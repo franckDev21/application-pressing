@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Produit;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +23,8 @@ class ApprovisionementFactory extends Factory
             'prix_achat' => rand(100,500000),
             'date' => now(),
             'type' => ['ENTRER','SORTIR','UPDATE'][rand(0,2)],
-            'produit_id' => Produit::inRandomOrder()->first()->id
+            'produit_id' => Produit::inRandomOrder()->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id
         ];
     }
 }

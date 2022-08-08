@@ -43,20 +43,45 @@ class ApprovisionementController extends Controller
             'quantite' => 'required',
             'prix_achat' => 'required',
             'date' => 'required',
-            'produit_id' => 'required'
+            'produit_id' => 'required',
         ]);
 
         // on cree l'appro
-        Approvisionement::create($data);
+        Approvisionement::create(array_merge([
+            'user_id' => auth()->user()->id
+        ],$data));
 
         //  on met a jour la quantité en stock du produit conserner
         $produit = Produit::findOrFail($request->produit_id);
         $produit->update([
-            'quantite' => ((int)$request->quantite + (int)$produit->quantite)
+            'quantite' => ((int)$request->quantite + (int)$produit->quantite),
+            'prix_achat' => (int)$request->prix_achat
         ]);
 
         Session::flash('success','Approvisionnement créé avec succès !');
-        return to_route('appro.index');
+        return to_route('produit.show',$produit);
+    }
+
+    public function sortie(Request $request, Produit $produit){
+        if((int)$request->quantite <= (int)$produit->quantite){
+            $produit->update([
+                'quantite' => (int)$produit->quantite - (int)$request->quantite
+            ]);
+
+            Approvisionement::create([
+                'user_id' => auth()->user()->id,
+                'type' => 'SORTIR',
+                'produit_id' => $produit->id,
+                'date' => now(),
+                'quantite' => (int)$produit->quantite
+            ]);
+
+            Session::flash('success','Quantité en stock mise a jour avec succès !');
+            return to_route('produit.show',$produit);
+        }else{
+            Session::flash('error','Quantité en stock insufisant');
+            return back();
+        }
     }
 
     /**

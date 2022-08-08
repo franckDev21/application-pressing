@@ -2,26 +2,22 @@
 
 namespace App\View\Components;
 
+use App\Models\Approvisionement;
 use App\Models\Produit;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
 
-class ModalAddAppro extends Component
+class ModalApproSortie extends Component
 {
-    public $produits;
     public $produit;
-    public $edit;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(?Collection $produits,Produit $produit,bool $edit = false)
+    public function __construct(Produit $produit,Approvisionement $approvisionnement)
     {
-        $this->produits = $produits;
         $this->produit = $produit;
-        $this->edit = $edit;
     }
 
     /**
@@ -31,6 +27,6 @@ class ModalAddAppro extends Component
      */
     public function render()
     {
-        return view('components.modal-add-appro');
+        return view('components.modal-appro-sortie');
     }
 }

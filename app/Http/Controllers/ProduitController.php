@@ -62,6 +62,8 @@ class ProduitController extends Controller
      */
     public function show(Produit $produit)
     {
+        $produits = Produit::all();
+
         $totalApproEntrer = Approvisionement::where('type','ENTRER')
             ->where('produit_id',$produit->id)
             ->count();
@@ -71,6 +73,7 @@ class ProduitController extends Controller
             ->count();  
 
         return view('produits.show',compact(
+            'produits',
             'produit',
             'totalApproEntrer',
             'totalApproSortie'

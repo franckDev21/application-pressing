@@ -96,6 +96,7 @@ Route::middleware(['auth'])->group(function(){
 
         Route::get('/',[ApprovisionementController::class,'index'])->name('index');
         Route::post('/',[ApprovisionementController::class,'store'])->name('store');
+        Route::post('/sortie/{produit}',[ApprovisionementController::class,'sortie'])->name('sortie');
         Route::delete('/{approvisionement}',[ApprovisionementController::class,'destroy'])->name('delete');
 
     });

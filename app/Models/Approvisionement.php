@@ -13,7 +13,9 @@ class Approvisionement extends Model
         'quantite',
         'prix_achat',
         'date',
-        'produit_id'
+        'produit_id',
+        'user_id',
+        'type'
     ];
 
 
@@ -28,5 +30,9 @@ class Approvisionement extends Model
 
     public function produit(){
         return $this->belongsTo(Produit::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

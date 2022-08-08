@@ -73,7 +73,7 @@
                             </li>
                             <li  class="flex mt-2 items-center justify-between pl-5 w-full">
                                 <i class="las la-clipboard-list text-2xl"></i>
-                                <a href="{{ route('commande.create') }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 {{ request()->routeIs('commande.create') ? 'bg-white':'' }}" >Historique produit</a>
+                                <a href="{{ route('appro.index')  }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 {{ request()->routeIs('commande.create') ? 'bg-white':'' }}" >Historique produit</a>
                             </li>
                             <li  class="flex mt-2 items-center justify-between pl-5 w-full">
                                 <i class="las la-people-carry text-2xl"></i>
