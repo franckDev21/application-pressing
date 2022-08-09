@@ -438,7 +438,7 @@
 </head>
 
 <body>
-    <a class="text-center block_a " href="http://localhost:8000/">
+    <a class="text-center block_a " href="https://clear-pressing.herokuapp.com/">
         <blockquote style="font-style:italic; display: flex; align-items:center;" class="logo">
             <span class="logo__clear" style="color: #fff !important">
                 Clear
