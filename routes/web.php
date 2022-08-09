@@ -15,7 +15,7 @@ Route::view('/','welcome');
 
 require __DIR__.'/auth.php';
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth','verified'])->group(function(){
 
     //  dashboard page
     Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
