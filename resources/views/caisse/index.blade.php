@@ -14,56 +14,56 @@
     </div>
   </div>
 
-  <table class="min-w-full divide-y divide-gray-200">
-    <thead class="bg-gray-50">
-        <tr>
-            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                date
-            </th>
-            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                montant
-            </th>
-            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                tyoe
-            </th>
-            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              motif
-            </th>
-            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              auteur
-            </th>
-            <th scope="col" class="p-4 text-left  font-medium text-gray-500 uppercase tracking-wider">
-                <a data-modal-toggle="add-entrer-modal" class="px-4 rounded-md bg-cyan-500 text-white py-1 border-4 uppercase font-bold hover:bg-cyan-600 transition-all active:scale-[.90] border-cyan-200 text-xs"><i class="las la-plus"></i> entrer</a>
-                <a data-modal-toggle="add-sortie-modal" class="px-4 rounded-md bg-red-500 text-white py-1 border-4 uppercase font-bold hover:bg-red-600 transition-all active:scale-[.90] border-red-200 text-xs"><i class="las la-plus"></i> sortie</a>
-            </th>
-        </tr>
-    </thead>
-    <tbody class="bg-white">
-        @foreach ($caisses as $key => $caisse)
-            <tr class="{{ $key % 2 === 0 ? '' : 'bg-gray-50' }}">
-                <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                    {{ $caisse->created_at->format('d M Y') }} 
-                </td>
-                <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                    {{ number_format($caisse->montant, 0, ',', '  ') }} FCFA
-                </td>
-                <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                    {{ $caisse->type }}
-                  </td>
-                <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                  {{ $caisse->motif }}
-                </td>
-                <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                  {{ $caisse->user->name }}
-                </td>
-                <td class="p-4 flex items-center justify-center">
-                 
-                </td>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    date
+                </th>
+                <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    montant
+                </th>
+                <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    tyoe
+                </th>
+                <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                motif
+                </th>
+                <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                auteur
+                </th>
+                <th scope="col" class="p-4 text-left  font-medium text-gray-500 uppercase tracking-wider">
+                    <a data-modal-toggle="add-entrer-modal" class="px-4 rounded-md bg-cyan-500 text-white py-1 border-4 uppercase font-bold hover:bg-cyan-600 transition-all active:scale-[.90] border-cyan-200 text-xs"><i class="las la-plus"></i> entrer</a>
+                    <a data-modal-toggle="add-sortie-modal" class="px-4 rounded-md bg-red-500 text-white py-1 border-4 uppercase font-bold hover:bg-red-600 transition-all active:scale-[.90] border-red-200 text-xs"><i class="las la-plus"></i> sortie</a>
+                </th>
             </tr>
-        @endforeach
-        
-    </tbody>
-</table>
+        </thead>
+        <tbody class="bg-white">
+            @foreach ($caisses as $key => $caisse)
+                <tr class="{{ $key % 2 === 0 ? '' : 'bg-gray-50' }}">
+                    <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
+                        {{ $caisse->created_at->format('d M Y') }} 
+                    </td>
+                    <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                        {{ number_format($caisse->montant, 0, ',', '  ') }} FCFA
+                    </td>
+                    <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                        {{ $caisse->type }}
+                    </td>
+                    <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                    {{ $caisse->motif }}
+                    </td>
+                    <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                    {{ $caisse->user->name }}
+                    </td>
+                    <td class="p-4 flex items-center justify-center">
+                    
+                    </td>
+                </tr>
+            @endforeach
+            
+        </tbody>
+    </table>
 <div class="px-4 border-t pt-2">
   {{ $caisses->links() }}
 </div>

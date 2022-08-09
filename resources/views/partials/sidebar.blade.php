@@ -81,6 +81,7 @@
                             </li>
                         </ul>
                     </li>
+                    
                     <li>
                         <a href="{{ route('caisse.index') }}"
                             class="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ">
@@ -88,12 +89,24 @@
                             <span class="ml-3 flex-1 whitespace-nowrap">Caisse</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="https://demo.themesberg.com/windster/authentication/sign-in/"
-                            class="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ">
+                    <li x-data="{ open: false }" class="cursor-pointer">
+                        <span @click="open = ! open"
+                            class="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group {{  request()->routeIs('vetement_type.index') || request()->routeIs('produit.index') ? 'bg-gray-100':'' }}">
                             <i class="las la-cog text-3xl"></i>
                             <span class="ml-3 flex-1 whitespace-nowrap">Options</span>
-                        </a>
+                            
+                        </span>
+                        <ul x-show="open" class="-mt-2 pt-1 rounded-md bg-gray-100 pb-2">
+                            <li  class="flex mt-2 items-center justify-between pl-5 w-full">
+                                <i class="las la-tshirt text-2xl"></i>
+                                <a href="{{ route('vetement_type.index') }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 {{ request()->routeIs('vetement_type.index') ? 'bg-white':'' }}" >Type vêtement</a>
+                            </li>
+                            <!-- <li  class="flex mt-2 items-center justify-between pl-5 w-full">
+                                <i class="las la-user-astronaut text-2xl"></i>
+                                <a href="{{ route('appro.index')  }}" class="py-2 px-4 rounded-md inline-block hover:bg-white mr-2 {{ request()->routeIs('commande.create') ? 'bg-white':'' }}" >Type services</a>
+                            </li>
+                            -->
+                        </ul>
                     </li>
                 </ul>
             </div>

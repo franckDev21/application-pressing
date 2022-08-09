@@ -4,27 +4,21 @@ use App\Http\Controllers\ApprovisionementController;
 use App\Http\Controllers\CaisseController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\TypeVetementController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::view('/','welcome');
 
 require __DIR__.'/auth.php';
 
 Route::middleware(['auth'])->group(function(){
-    Route::view('/dashboard','index')->name('dashboard');
+
+    //  dashboard page
+    Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
 
     // clients
     Route::prefix('clients')->name('client.')->group(function(){
@@ -109,6 +103,16 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/',[CaisseController::class,'store'])->name('store');
         Route::post('/sortie',[CaisseController::class,'sortie'])->name('sortie');
         Route::get('/print',[CaisseController::class,'printCaisse'])->name('printCaisse');
+        
+    });
+
+    // type vêtements
+    Route::prefix('config/vetements/type')->name('vetement_type.')->group(function(){
+
+        Route::get('/',[TypeVetementController::class,'index'])->name('index');
+        Route::post('/',[TypeVetementController::class,'store'])->name('store');
+        Route::patch('/{typeVetement}',[TypeVetementController::class,'update'])->name('update');
+        Route::delete('/{typeVetement}',[TypeVetementController::class,'destroy'])->name('delete');
         
     });
 

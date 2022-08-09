@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class TypeVetement extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
 }
