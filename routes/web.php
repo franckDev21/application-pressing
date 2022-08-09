@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApprovisionementController;
+use App\Http\Controllers\CaisseController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\FournisseurController;
@@ -100,4 +101,15 @@ Route::middleware(['auth'])->group(function(){
         Route::delete('/{approvisionement}',[ApprovisionementController::class,'destroy'])->name('delete');
 
     });
+
+    // caisse
+    Route::prefix('caisse')->name('caisse.')->group(function(){
+
+        Route::get('/',[CaisseController::class,'index'])->name('index');
+        Route::post('/',[CaisseController::class,'store'])->name('store');
+        Route::post('/sortie',[CaisseController::class,'sortie'])->name('sortie');
+        Route::get('/print',[CaisseController::class,'printCaisse'])->name('printCaisse');
+        
+    });
+
 });

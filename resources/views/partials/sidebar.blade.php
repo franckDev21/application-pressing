@@ -82,7 +82,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="https://demo.themesberg.com/windster/e-commerce/products/"
+                        <a href="{{ route('caisse.index') }}"
                             class="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group ">
                             <i class="las la-hand-holding-usd text-4xl"></i>
                             <span class="ml-3 flex-1 whitespace-nowrap">Caisse</span>

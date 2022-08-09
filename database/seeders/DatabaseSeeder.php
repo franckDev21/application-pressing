@@ -30,7 +30,9 @@ class DatabaseSeeder extends Seeder
             VetementSeeder::class,
             FournisseurSeeder::class,
             ProduitSeeder::class,
-            ApprovisionementSeeder::class
+            ApprovisionementSeeder::class,
+            CaisseSeeder::class,
+            CaisseTotalSeeder::class
         ]);
     }
 }
