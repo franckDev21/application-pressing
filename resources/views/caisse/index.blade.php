@@ -24,7 +24,7 @@
                     montant
                 </th>
                 <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    tyoe
+                    type
                 </th>
                 <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 motif

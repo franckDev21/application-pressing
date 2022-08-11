@@ -229,6 +229,8 @@ const Commande : FC<CommandeType> = ({id}) => {
       
       axios.patch(`http://localhost:8000/commandes/${id}`,data_commande).then(res => {
         setLoad(false);
+        // console.log(res.data);
+        
         if(res.data.message === 'success'){
           (window.location as any) = `/commandes/${id}`;
         }

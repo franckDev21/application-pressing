@@ -129,22 +129,32 @@ class CommandeController extends Controller
     {
         // on crée la commande
         $data = $request->commande;
-        $commande = Commande::create($data);
+        $newCommande = $commande = Commande::create($data);
 
         // on met a jour la caisse
         Caisse::create([
             'user_id' => auth()->user()->id,
             'type'    => 'ENTRER',
-            'modif'   => 'Nouvelle commande',
-            'montant' => (int)$request->commande['cout_total']
+            'motif'   => 'Nouvelle commande',
+            'montant' => (int)$data['cout_total'],
+            'commande_id' => $newCommande->id
         ]);
 
         $caisse = CaisseTotal::first();
-        $total = $caisse->sum('montant');
 
-        $caisse->update([
-            'montant' => (int)$total + (int)$request->commande['cout_total']
-        ]);
+        $total = 0;
+
+        if($caisse){
+            $total = $caisse->sum('montant');
+
+            $caisse->update([
+                'montant' => (int)$total + (int)$request->commande['cout_total']
+            ]);
+        }else{
+            CaisseTotal::create([
+                'montant' => (int)$total + (int)$request->commande['cout_total']
+            ]);
+        }
 
         // on sauvegarder les vêtements de la commande
         foreach($request->vetements as $vetement){
@@ -230,31 +240,47 @@ class CommandeController extends Controller
      */
     public function update(Request $request, Commande $commande)
     {
+        // on garde la valeur de l'ancienne commande
+        $old_commande = clone $commande;
+
         // on met a jour la commande
         $commande->update($request->commande);
+        $new_commande = Commande::findOrFail($commande->id);
 
-        // on recupere 
-        // on met a jour la caisse
-        Caisse::create([
-            'user_id' => auth()->user()->id,
-            'type'    => 'ENTRER',
-            'motif'   => 'Nouvelle commande',
-            'montant' => (int)$request->commande['cout_total']
-        ]);
+        # Mise a jour de la caisse
+        // on recupere le cout total de l'ancienne commande avant l'update
+        $cout_total_ancienne_commande = $old_commande->cout_total;
 
-        $caisse = CaisseTotal::first();
-        $total = $caisse->sum('montant');
+        $caisse =  Caisse::where('commande_id',$old_commande->id)->first();
 
-        $caisse->update([
-            'montant' => (int)$total + (int)$request->commande['cout_total']
-        ]);
+        if($caisse){
+            $caisse->update([
+                'montant' => $new_commande->cout_total
+            ]);
+        }
+
+        $caisseTotal = CaisseTotal::first();
+
+        $total = 0;
+
+        if($caisseTotal){
+            //  on retire l'ancien montant de la commande en caisse total
+            $total = (int)$caisseTotal->sum('montant') - (int)$cout_total_ancienne_commande;
+
+            // on ajoute au total le cout de la commande mise a jour
+            $total += (int)$new_commande->cout_total;
+
+            $caisseTotal->update([
+                'montant' => $total
+            ]);
+        }
 
         // on parcours les vetements
         foreach($request->vetements as $vetement){
             // on verifie grace a l'id si le vetement se trouve en BD
             $vetementDB = Vetement::find($vetement['id']);
 
-            if($vetement['qte'] !== 0){
+            if($vetement['qte'] != 0){
                 if($vetementDB){ // si oui on le modifie ou on supprime
                     if(isset($vetement['action']) && $vetement['action'] === 'delete'){
                         $vetementDB->delete();
