@@ -9,12 +9,16 @@
         <span>#Commade de </span>
         <span class="text-cyan-500">{{ $commande->client->nom }} {{ $commande->client->prenom }}</span> | 
         <span class="">
-          {{ Help\Helper::getTotalVetement($commande) }} Vêtement{{ Help\Helper::getTotalVetement($commande) > 1 ? 's':'' }} | {{ $commande->cout_total }} F
+          {{ Help\Helper::getTotalVetement($commande) }} Vêtement{{ Help\Helper::getTotalVetement($commande) > 1 ? 's':'' }} | <span class="text-cyan-500">{{ $commande->cout_total }} F</span>
         </span>
       </h1>
 
       <a class="px-4 py-2 border-2 uppercase font-semibold text-sm bg-gray-500 text-white rounded-md" href="{{ route('commande.edit',$commande) }}">voir la commande</a>
     </div>
+
+    @if ( !Str::contains($commande->typeLavage->name,'piece') )
+      <h4 class="text-xl border-b  font-extrabold text-gray-500 my-4 pb-2"><span class="text-cyan-500">{{ $commande->poids }} KG</span> | {{ $commande->typeLavage->name }} ({{ $commande->typeLavage->prix_par_kg }} F / KG) </h4>
+    @endif
 
   <div class="mt-4">
     <table class="min-w-full divide-y divide-gray-200">

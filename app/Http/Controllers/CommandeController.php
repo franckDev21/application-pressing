@@ -37,6 +37,7 @@ class CommandeController extends Controller
         $commandesTable = [];
         
         foreach ($commandes as $commande) {
+            $commande->typeLavage;
             $commandesTable[] = [
                 'quantite_total_vetement' => $commande->vetements->sum('quantite'),
                 'commande' => $commande,

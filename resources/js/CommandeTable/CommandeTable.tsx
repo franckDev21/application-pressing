@@ -16,6 +16,14 @@ type ClientType = {
   updated_at : string,
 }
 
+type TypeLavement = {
+  id: number,
+  name: string,
+  prix_par_kg: number,
+  created_at: string,
+  updated_at: string,
+}
+
 type CommandeModel = {
   client_id: number,
   cout_total: string,
@@ -26,7 +34,9 @@ type CommandeModel = {
   id: number,
   updated_at: string,
   client : ClientType,
-  vetements : any[]
+  vetements : any[],
+  type_lavage : TypeLavement,
+  type_lavage_id : number
 }
 
 type DataCommandes = {
@@ -51,6 +61,8 @@ const CommandeTable: FC<CommandeTableType> = () => {
     axios.get('http://localhost:8000/commandes/api').then(res => {
       setLoad(false);
       setCommandes(res.data);
+      console.log(res.data);
+      
     }).then(err => {
       setLoad(false);
       console.log(err);

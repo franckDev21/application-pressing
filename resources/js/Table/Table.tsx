@@ -10,6 +10,13 @@ type ClientType = {
   created_at : string,
   updated_at : string,
 }
+type TypeLavement = {
+  id: number,
+  name: string,
+  prix_par_kg: number,
+  created_at: string,
+  updated_at: string,
+}
 
 type CommandeModel = {
   client_id: number,
@@ -21,9 +28,10 @@ type CommandeModel = {
   id: number,
   updated_at: string,
   client : ClientType,
-  vetements : any[]
+  vetements : any[],
+  type_lavage : TypeLavement,
+  type_lavage_id : number
 }
-
 type DataCommandes = {
   quantite_total_vetement : number,
   commande : CommandeModel,
@@ -48,10 +56,13 @@ const Table: FC<TableType> = ({ commandes }) => {
                   prix total
               </th>
               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date de livraison
+                  livraison
               </th>
               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   état
+              </th>
+              <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Type lavage
               </th>
               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 client
@@ -75,6 +86,15 @@ const Table: FC<TableType> = ({ commandes }) => {
             </td>
             <td className={`p-4 whitespace-nowrap text-sm font-extrabold `}>
               {commande.commande.etat}
+            </td>
+            <td className={`p-4 whitespace-nowrap text-sm font-extrabold `}>
+              {commande.commande.type_lavage.name}
+              {!commande.commande.type_lavage.name.toLowerCase().includes('piece') && 
+                <>
+                  <br />
+                  <span>{commande.commande.type_lavage.prix_par_kg} / KG</span>
+                </>
+              }
             </td>
             <td className="p-4 whitespace-nowrap text-sm">
               <span className='font-semibold'>{commande.commande.client.nom} {commande.commande.client.prenom}</span> <br />
