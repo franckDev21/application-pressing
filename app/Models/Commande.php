@@ -16,7 +16,7 @@ class Commande extends Model
         'date_livraison',
         'client_id',
         'type_lavage_id',
-        'poids'
+        'poids',
     ];
 
     /**

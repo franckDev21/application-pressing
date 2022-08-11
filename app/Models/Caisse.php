@@ -10,7 +10,9 @@ class Caisse extends Model
     protected $fillable = [
         'montant',
         'type',
-        'user_id'
+        'user_id',
+        'motif',
+        'commande_id'
     ];
 
     use HasFactory;

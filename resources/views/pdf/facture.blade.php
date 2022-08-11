@@ -442,7 +442,13 @@
     </h1>
     <h3 style='text-decoration:underline; text-transform:uppercase;' class='text-center'>Facture de |
         <span class="font-bold">{{ $commande->client->nom }}</span> <span class="class="font-bold"">{{ $commande->client->prenom }}</span></h3>
-    <div class="text-center">
+        <h4 class="text-center">Type de lavage : {{ $commande->typeLavage->name }} @if(!Str::contains($commande->typeLavage->name,'piece')) | {{ number_format($commande->typeLavage->prix_par_kg,0,',','  ') }} F / KG  @endif</h4>
+       
+        @if ( !Str::contains($commande->typeLavage->name,'piece') )
+            <h4 class="text-center">Poids de la commande : {{ $commande->poids }} KG</h4>
+        @endif
+       
+        <div class="text-center">
         {{ \Carbon\Carbon::now()->format('d M Y à H:i') }}
     </div>
     
@@ -466,15 +472,22 @@
                         <td class="p-4 text-sm font-normal text-gray-900">
                             {{ $vetement->quantite }}
                         </td>
-                        <td class="p-4 text-sm font-normal text-gray-900">
-                            {{ number_format($vetement->prix_unitaire,0,',','  ') }} F
+                        <td class="p-4 text-sm font-normal text-gray-900" style="{{ !Str::contains($commande->typeLavage->name,'piece')? 'background-color: #eee':''}}">
+                            @if ( Str::contains($commande->typeLavage->name,'piece') )
+                                {{ number_format($vetement->prix_unitaire,0,',','  ') }} F
+                            @endif
                         </td>
                         <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
                             {{ $vetement->typeVetement->name }}
                         </td>
                     </tr>
                 @endforeach
-
+                <tr>
+                    <td style="font-weight: bold"  class="p-4 font-bold text-sm  text-gray-900">
+                        Total vêtement : {{ \Help\Helper::getTotalVetement($commande) }}
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
             </tbody>
 
         </table>

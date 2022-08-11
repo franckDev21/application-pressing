@@ -18,6 +18,10 @@ return new class extends Migration
             $table->integer('montant');
             $table->enum('type',['ENTRER','SORTIR'])->default('ENTRER');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('commande_id')
+                  ->nullable()
+                  ->constrained()
+                  ->onDelete('cascade');
             $table->timestamps();
         });
     }

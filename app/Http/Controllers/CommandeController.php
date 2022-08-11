@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CommandeResource;
 use App\Http\Resources\CommandeRessourceEdit;
 use App\Mail\FactureMail;
+use App\Models\Caisse;
+use App\Models\CaisseTotal;
 use App\Models\Client;
 use App\Models\Commande;
 use App\Models\TypeVetement;
@@ -129,7 +131,21 @@ class CommandeController extends Controller
         $data = $request->commande;
         $commande = Commande::create($data);
 
-        
+        // on met a jour la caisse
+        Caisse::create([
+            'user_id' => auth()->user()->id,
+            'type'    => 'ENTRER',
+            'modif'   => 'Nouvelle commande',
+            'montant' => (int)$request->commande['cout_total']
+        ]);
+
+        $caisse = CaisseTotal::first();
+        $total = $caisse->sum('montant');
+
+        $caisse->update([
+            'montant' => (int)$total + (int)$request->commande['cout_total']
+        ]);
+
         // on sauvegarder les vêtements de la commande
         foreach($request->vetements as $vetement){
             if($vetement['qte'] !== 0){
@@ -217,6 +233,22 @@ class CommandeController extends Controller
         // on met a jour la commande
         $commande->update($request->commande);
 
+        // on recupere 
+        // on met a jour la caisse
+        Caisse::create([
+            'user_id' => auth()->user()->id,
+            'type'    => 'ENTRER',
+            'motif'   => 'Nouvelle commande',
+            'montant' => (int)$request->commande['cout_total']
+        ]);
+
+        $caisse = CaisseTotal::first();
+        $total = $caisse->sum('montant');
+
+        $caisse->update([
+            'montant' => (int)$total + (int)$request->commande['cout_total']
+        ]);
+
         // on parcours les vetements
         foreach($request->vetements as $vetement){
             // on verifie grace a l'id si le vetement se trouve en BD
@@ -302,8 +334,8 @@ class CommandeController extends Controller
     public function printFacture(Commande $commande,Client $client){
 
         // send mail
-        Mail::to($client->email)
-            ->send(new FactureMail($commande));
+        // Mail::to($client->email)
+        //     ->send(new FactureMail($commande));
 
         $pdf = App::make('dompdf.wrapper');
 
