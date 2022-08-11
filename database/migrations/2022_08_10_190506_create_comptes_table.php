@@ -13,14 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('commandes', function (Blueprint $table) {
+        Schema::create('comptes', function (Blueprint $table) {
             $table->id();
-            $table->double('cout_total');
-            $table->enum('etat',['SOLDER','IMPAYER','AVANCER'])->default('IMPAYER');
-            $table->text('description')->nullable();
-            $table->timestamp('date_livraison');
+            $table->integer('montant');
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
-            $table->foreignId('type_lavage_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('commandes');
+        Schema::dropIfExists('comptes');
     }
 };

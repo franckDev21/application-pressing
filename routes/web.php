@@ -7,6 +7,7 @@ use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FournisseurController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\TypeLarvementController;
 use App\Http\Controllers\TypeVetementController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,11 @@ Route::middleware(['auth','verified'])->group(function(){
 
     //  dashboard page
     Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
+
+    // typelavement
+    Route::prefix('lavement/types')->name('lavement.')->group(function(){
+        Route::get('/api',[TypeLarvementController::class,'indexApi'])->name('indexApi');
+    });
 
     // clients
     Route::prefix('clients')->name('client.')->group(function(){

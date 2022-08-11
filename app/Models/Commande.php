@@ -14,7 +14,9 @@ class Commande extends Model
         'etat',
         'description',
         'date_livraison',
-        'client_id'
+        'client_id',
+        'type_lavage_id',
+        'poids'
     ];
 
     /**
@@ -28,6 +30,10 @@ class Commande extends Model
 
     public function client(){
         return $this->belongsTo(Client::class);
+    }
+
+    public function typeLavage(){
+        return $this->belongsTo(TypeLavage::class);
     }
 
     public function vetements(){

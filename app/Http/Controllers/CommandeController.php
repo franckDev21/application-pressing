@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class CommandeController extends Controller
 {
@@ -131,14 +132,29 @@ class CommandeController extends Controller
         
         // on sauvegarder les vêtements de la commande
         foreach($request->vetements as $vetement){
-            if($vetement['qte'] !== 0 && $vetement['prix_unitaire'] !== 0){
+            if($vetement['qte'] !== 0){
                 if(isset($vetement['action']) && $vetement['action'] !== 'delete'){
-                    Vetement::create([
-                        'type_vetement_id' => $vetement['type_vetement_id'],
-                        'commande_id' => $commande->id,
-                        'quantite' => $vetement['qte'],
-                        'prix_unitaire' => $vetement['prix_unitaire']
-                    ]);
+
+                    if( Str::contains($request->commande['type_lavement']['name'],'piece') ){
+                        $prix_unitaire = $vetement['prix_unitaire'];
+                        if($prix_unitaire !== 0){
+                            Vetement::create([
+                                'type_vetement_id' => $vetement['type_vetement_id'],
+                                'commande_id' => $commande->id,
+                                'quantite' => $vetement['qte'],
+                                'prix_unitaire' => $prix_unitaire
+                            ]);
+                        }
+                    }else{
+                        Vetement::create([
+                            'type_vetement_id' => $vetement['type_vetement_id'],
+                            'commande_id' => $commande->id,
+                            'quantite' => $vetement['qte'],
+                            'prix_unitaire' => null
+                        ]);
+                    }
+
+                    
                 }
             }
         }
@@ -181,6 +197,7 @@ class CommandeController extends Controller
     }
 
     public function showApi(Request $request,Commande $commande){
+        $commande->typeLavage;
         return response()->json([
             'commande' => $commande,
             'vetements' => $commande->vetements,
@@ -205,24 +222,47 @@ class CommandeController extends Controller
             // on verifie grace a l'id si le vetement se trouve en BD
             $vetementDB = Vetement::find($vetement['id']);
 
-            if($vetement['qte'] !== 0 && $vetement['prix_unitaire'] !== 0){
+            if($vetement['qte'] !== 0){
                 if($vetementDB){ // si oui on le modifie ou on supprime
                     if(isset($vetement['action']) && $vetement['action'] === 'delete'){
                         $vetementDB->delete();
                     }else{
-                        $vetementDB->update([
-                            'quantite' => $vetement['qte'],
-                            'prix_unitaire' => $vetement['prix_unitaire'],
-                            'type_vetement_id' => $vetement['type_vetement_id']
-                        ]);
+                        if( Str::contains($request->commande['type_lavage']['name'],'piece') ){
+                            if($vetement['prix_unitaire'] !== 0){
+                                $vetementDB->update([
+                                    'quantite' => $vetement['qte'],
+                                    'prix_unitaire' => $vetement['prix_unitaire'],
+                                    'type_vetement_id' => $vetement['type_vetement_id']
+                                ]);
+                            }
+                        }else{
+                            $vetementDB->update([
+                                'quantite' => $vetement['qte'],
+                                'prix_unitaire' => null,
+                                'type_vetement_id' => $vetement['type_vetement_id']
+                            ]);
+                        }
                     }
                 }else{ // sinon en l'enregistre
-                    Vetement::create([
-                        'type_vetement_id' => $vetement['type_vetement_id'],
-                        'commande_id' => $commande->id,
-                        'quantite' => $vetement['qte'],
-                        'prix_unitaire' => $vetement['prix_unitaire']
-                    ]);
+                    if( Str::contains($request->commande['type_lavage']['name'],'piece') ){
+                        //  on enregistre le vetement ssi son pu n'est pas 0
+                        if($vetement['prix_unitaire'] !== 0){
+                            Vetement::create([
+                                'type_vetement_id' => $vetement['type_vetement_id'],
+                                'commande_id' => $commande->id,
+                                'quantite' => $vetement['qte'],
+                                'prix_unitaire' => $vetement['prix_unitaire']
+                            ]);
+                        }
+                    }else{
+                        Vetement::create([
+                            'type_vetement_id' => $vetement['type_vetement_id'],
+                            'commande_id' => $commande->id,
+                            'quantite' => $vetement['qte'],
+                            'prix_unitaire' => null
+                        ]);
+                    }
+                    
                 }
             }
             

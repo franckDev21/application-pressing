@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Client;
+use App\Models\TypeLavage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,7 +24,8 @@ class CommandeFactory extends Factory
             'etat' => ['SOLDER','IMPAYER','AVANCER'][rand(0,2)],
             'date_livraison' => now(),
             'description' => $this->faker->paragraph,
-            'client_id' => Client::inRandomOrder()->first()->id
+            'client_id' => Client::inRandomOrder()->first()->id,
+            'type_lavage_id' => TypeLavage::inRandomOrder()->first()->id
         ];
     }
 }

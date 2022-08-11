@@ -29,7 +29,7 @@ const FormClient: FC<TypeFormClient> = ({ onClickCallback, addNewClient }) => {
         tel
       };
       setLoad(true);
-      axios.post('https://clear-pressing.herokuapp.com/clients/api',data).then(res => {
+      axios.post('http://localhost:8000/clients/api',data).then(res => {
         setLoad(false);
         if(res.data.success){
           setSessionMsgSuccess(res.data.success);

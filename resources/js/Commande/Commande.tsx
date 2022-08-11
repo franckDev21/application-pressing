@@ -31,9 +31,19 @@ type CommandeModel = {
   cout_total: string,
   created_at: string,
   date_livraison: string,
-  description: null
+  description: string|null,
+  poids : string|null,
   etat: string,
   id: number,
+  updated_at: string,
+  type_lavage : TypeLavement
+}
+
+type TypeLavement = {
+  id: number,
+  name: string,
+  prix_par_kg: number,
+  created_at: string,
   updated_at: string,
 }
 
@@ -41,11 +51,17 @@ const Commande : FC<CommandeType> = ({id}) => {
 
   const [clientId,setClientId] = useState('');
   const [clients,setClients] = useState([]);
+  const [typeLavementState,setTypeLavementState] = useState<TypeLavement|null>(null);
+  const [typeLavementHasIsKg,setTypeLavementHasIsKg] = useState(false);
+  const [poidsKg,setPoidsKg] = useState<string>('');
   const [vetementTypes,setVetementTypes] = useState([]);
   const [vetements,setVetements] = useState<VetementModel[]>([]);
   const [dateLivraison,setdateLivraison] = useState('');
   const [commandeState,setCommandeState] = useState<any>(null);
   const [description,setDescription] = useState<string|null>(null);
+
+  const [typeLavement,setTypeLavement] = useState<TypeLavement[]>([]);
+
 
   const [addNewClientState,setAddNewClientState] = useState(false);
 
@@ -92,6 +108,14 @@ const Commande : FC<CommandeType> = ({id}) => {
 
   }
 
+  const handleOnchangeTypeLavementState = (e: ChangeEvent<HTMLSelectElement>) =>{
+    if(e.target.value !== ''){
+      let type: TypeLavement = JSON.parse(e.target.value);
+      setTypeLavementState(type);
+      // console.log(type);
+    }
+  }
+
   const deleteVetement = (id: number) => {
     let vetement = vetements.find(el => el.id === id);
     (vetement as VetementModel).action = 'delete';
@@ -109,11 +133,17 @@ const Commande : FC<CommandeType> = ({id}) => {
         }
       });
     }else{
-      vetements.forEach(vetement => {
-        if((vetement.action || '') !== 'delete'){
-          somme += multiplication(vetement.qte,vetement.prix_unitaire);
-        }
-      });
+      if(!typeLavementHasIsKg){
+        vetements.forEach(vetement => {
+          if((vetement.action || '') !== 'delete'){
+            somme += multiplication(vetement.qte,vetement.prix_unitaire);
+          }
+        });
+      }else{
+
+        return (typeLavementState?.prix_par_kg || 0) * (parseInt(poidsKg,10) || 0);
+      }
+      
     }
     
     return somme;
@@ -151,15 +181,23 @@ const Commande : FC<CommandeType> = ({id}) => {
           client_id : clientId,
           cout_total : calculTotal(),
           date_livraison: dateLivraison,
-          description
+          description,
+          type_lavement : typeLavementState,
+          type_lavage_id : typeLavementState?.id || null,
+          poids : poidsKg || null
         },
         vetements
       }
+
+      console.log(data);
+      
       
       setLoad(true);
   
-      axios.post('https://clear-pressing.herokuapp.com/commandes',data).then(res => {
+      axios.post('http://localhost:8000/commandes',data).then(res => {
         setLoad(false);
+        // console.log(res.data);
+        
         if(res.data.success){
           let id = +res.data.commande_id;
           (window.location as any) = `/commandes/${id}`;
@@ -180,11 +218,16 @@ const Commande : FC<CommandeType> = ({id}) => {
           client_id : parseInt(clientId,10),
           date_livraison : dateLivraison,
           cout_total : calculTotal(),
+          poids : poidsKg || null,
+          type_lavage : typeLavementState,
+          type_lavage_id : typeLavementState?.id || null,
         },
         vetements
       }
       
-      axios.patch(`https://clear-pressing.herokuapp.com/commandes/${id}`,data_commande).then(res => {
+      console.log(data_commande);
+      
+      axios.patch(`http://localhost:8000/commandes/${id}`,data_commande).then(res => {
         setLoad(false);
         if(res.data.message === 'success'){
           (window.location as any) = `/commandes/${id}`;
@@ -202,6 +245,8 @@ const Commande : FC<CommandeType> = ({id}) => {
     setdateLivraison(date);
     setClientId(commande.client_id.toString());
     setDescription(commande.description);
+    setTypeLavementState(commande.type_lavage);
+    setPoidsKg(commande.poids || '0');
 
     let tabVetements :any = [];
 
@@ -229,17 +274,23 @@ const Commande : FC<CommandeType> = ({id}) => {
   }
 
   useEffect(() => {
-    axios.get('https://clear-pressing.herokuapp.com/clients/api').then(res => {
+    axios.get('http://localhost:8000/clients/api').then(res => {
       setClients(res.data);
     }).catch(err => console.log(err));
 
-    axios.get('https://clear-pressing.herokuapp.com/commandes/vetements/api').then(res => {
+    axios.get('http://localhost:8000/lavement/types/api').then(res => {
+      setTypeLavement(res.data);
+    }).catch(err => console.log(err));
+
+    axios.get('http://localhost:8000/commandes/vetements/api').then(res => {
       setVetementTypes(res.data);
     }).catch(err => console.log(err));
 
     if(id){
-      axios.get(`https://clear-pressing.herokuapp.com/commandes/${id}/api`).then(res => {
+      axios.get(`http://localhost:8000/commandes/${id}/api`).then(res => {
         setCommandeState(res.data.commande);
+        console.log('commande : ',res.data.commande);
+        
         initCommande(res.data.commande,res.data.vetements,res.data.date_format);
       }).catch(err => console.log(err));
     }
@@ -247,7 +298,7 @@ const Commande : FC<CommandeType> = ({id}) => {
   },[]);
 
   useEffect(() => {
-    axios.get('https://clear-pressing.herokuapp.com/clients/api').then(res => {
+    axios.get('http://localhost:8000/clients/api').then(res => {
       setClients(res.data);
     }).catch(err => console.log(err));
   },[addNewClientState]);
@@ -256,6 +307,17 @@ const Commande : FC<CommandeType> = ({id}) => {
     calculTotal();
     calculTotalVetement();
   },[vetements]);
+
+  useEffect(() => {
+    setTypeLavementHasIsKg(
+        ( (typeLavementState?.name.toLowerCase().includes('kg') || typeLavementState?.name.toUpperCase().includes('kg')) 
+          ||
+          (typeLavementState?.name.toLowerCase().includes('watch') || typeLavementState?.name.toUpperCase().includes('watch')
+        ))
+      || 
+      false
+    )
+  },[typeLavementState]);
 
 
   return (
@@ -272,7 +334,7 @@ const Commande : FC<CommandeType> = ({id}) => {
             </select>
            <div className='flex items-center justify-between w-1/3'>
             <input onChange={(e) => setdateLivraison(e.target.value)} value={dateLivraison} type="date" placeholder='date' className='ml-2 w-1/2 px-4 py-1 border-none outline-none ring-0  focus:outline-none focus:ring-0 rounded-md bg-gray-100' />
-            {!id && <button onClick={() => setShowAddClient(true)} className='px-3 w-1/2 py-1 rounded-md bg-cyan-600 text-white ml-2'>Nouveau client</button>}
+            <button onClick={() => setShowAddClient(true)} className='px-3 w-1/2 py-1 rounded-md bg-cyan-600 text-white ml-2'>Nouveau client</button>
            </div>
           </div>
 
@@ -281,9 +343,30 @@ const Commande : FC<CommandeType> = ({id}) => {
           <span className='mb-3 mt-10 inline-block'></span>
 
           <div className="flex justify-between items-center pt-1 pb-2">
-            <h1 className='text-xl font-bold text-gray-400 '>Vêtement | <span ref={totalVetementRef}>{calculTotalVetement()}</span></h1>
-            <button onClick={() => addVetement()} className='px-3 py-1 rounded-md bg-gray-600 text-white'>Ajouter</button>
+            <h1 className='text-xl items-center flex font-bold text-gray-400 mb-4 mt-2'>
+              <div className='inline-flex items-center justify-between'>
+                <span>Type de lavage : </span> &nbsp;
+                <select  value={JSON.stringify(typeLavementState)} onChange={(e) => handleOnchangeTypeLavementState(e)} className='px-10 mt-1 py-1 bg-gray-100 border-none text-sm rounded-md mr-4'>
+                  <option value="">Selectionner un type de lavage</option>
+                  {typeLavement.map((type: TypeLavement) => (
+                    <option value={JSON.stringify(type)} key={type.id}>
+                      {type.name} {type.name !== 'lavage par piece' && ` | ${type.prix_par_kg} / KG`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              Vêtement | &nbsp; <span ref={totalVetementRef}>{calculTotalVetement()}</span>
+            </h1>
+          
+            <button onClick={() => addVetement()} className='px-3 py-1 rounded-md bg-gray-400 text-white'>Ajouter</button>
           </div>
+          
+          { typeLavementHasIsKg && 
+            <div className='flex items-center text-xl font-bold text-gray-400 mb-3 border-t pt-2'>
+              <span className='mr-3'>Entrer le poids en KG des vêtements : </span>
+              <input type="number" min={0} value={poidsKg || ''} onChange={(e) => setPoidsKg(e.target.value)} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 bg-gray-50  rounded-md' />
+            </div>
+          }
 
           {vetements.length > 0 ? (
             <>
@@ -293,7 +376,7 @@ const Commande : FC<CommandeType> = ({id}) => {
                       <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Quantité
                       </th>
-                      <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th scope="col" className={` p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider`}>
                         Prix unitaire
                       </th>
                       <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -313,7 +396,7 @@ const Commande : FC<CommandeType> = ({id}) => {
                             <input onChange={(e) => updateVetement(e,'QTE',vetement.id)} type="number" min={0} value={vetement.qte} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md' />
                           </td>
                           <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                            <input onChange={(e) => updateVetement(e,'PRIX',vetement.id)} type="number" min={0} value={vetement.prix_unitaire} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md' />
+                            <input onChange={(e) => updateVetement(e,'PRIX',vetement.id)} type="number" min={0} defaultValue={vetement.prix_unitaire} className={`${ typeLavementHasIsKg && 'disabled'} border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md`} />
                           </td>
                           <td className="p-4 whitespace-nowrap text-sm font-semibold">
                             <select onChange={(e) => updateVetement(e,'TYPE',vetement.id)} value={vetement.type_vetement_id || ''} className='border-2 border-gray-200 outline-none focus:ring-0 focus:outline-none focus:border-gray-200 py-1 w-full bg-gray-50  rounded-md'>
@@ -341,7 +424,7 @@ const Commande : FC<CommandeType> = ({id}) => {
           </div>
 
           <div className="text-center mb-4 mt-6">
-            <span onClick={handleSubmitForm} className={` ${(calculTotal() <= 0 || clientId === '' || dateLivraison === '') ? 'disabled':''} px-6 cursor-pointer rounded-md font-bold py-3 hover:bg-cyan-700 active:scale-[90%] bg-cyan-600 text-white`}>
+            <span onClick={handleSubmitForm} className={` ${(calculTotal() <= 0 || calculTotalVetement() <= 0 || !typeLavementState  || clientId === '' || dateLivraison === '') ? 'disabled':''} px-6 cursor-pointer rounded-md font-bold py-3 hover:bg-cyan-700 active:scale-[90%] bg-cyan-600 text-white`}>
               {load ? 'Chargement ... ':(
                 <>
                   {id ? 'Mettre à jour la commande':'Enregistrer la commande'}

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('vetements', function (Blueprint $table) {
             $table->id();
             $table->integer('quantite')->default(1);
-            $table->integer('prix_unitaire')->default(1);
+            $table->integer('prix_unitaire')->nullable();
             $table->enum('statut',[
                 'REÇU',
                 'EN_COURS_DE_LAVAGE',

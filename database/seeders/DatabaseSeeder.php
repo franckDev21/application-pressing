@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             ClientSeeder::class,
+            TypeLavageSeeder::class,
             CommandeSeeder::class,
             TypeVetementSeeder::class,
             VetementSeeder::class,
@@ -32,7 +33,8 @@ class DatabaseSeeder extends Seeder
             ProduitSeeder::class,
             ApprovisionementSeeder::class,
             CaisseSeeder::class,
-            CaisseTotalSeeder::class
+            CaisseTotalSeeder::class,
+            CompteSeeder::class,
         ]);
     }
 }

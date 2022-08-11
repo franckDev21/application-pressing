@@ -48,7 +48,7 @@ const CommandeTable: FC<CommandeTableType> = () => {
 
   useEffect(() => {
     setLoad(true);
-    axios.get('https://clear-pressing.herokuapp.com/commandes/api').then(res => {
+    axios.get('http://localhost:8000/commandes/api').then(res => {
       setLoad(false);
       setCommandes(res.data);
     }).then(err => {
