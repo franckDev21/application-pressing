@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CommandeResource;
-use App\Http\Resources\CommandeRessourceEdit;
 use App\Mail\FactureMail;
 use App\Models\Caisse;
 use App\Models\CaisseTotal;
@@ -11,7 +9,6 @@ use App\Models\Client;
 use App\Models\Commande;
 use App\Models\TypeVetement;
 use App\Models\Vetement;
-use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
@@ -54,20 +51,74 @@ class CommandeController extends Controller
     }
 
     public function vetementDelete(Request $request,Commande $commande,Vetement $vetement){
+
+        $commande     = Commande::findOrFail($commande->id);
+        $old_commande = clone $commande;
+        $cout_total   = 0;
+        $count_old_vetement = $old_commande->vetements->count();
+
         // supprimer le vetement
         $vetement->delete();
 
-        $commande = Commande::findOrFail($commande->id);
+        if ( $count_old_vetement > 1) {
+            if (Str::contains($commande->typeLavage->name,'piece')){
+                // On recalcule la cout total de la commande
+                foreach ($commande->vetements as $vet) {
+                    $cout_total += $this->multiplication($vet->quantite,$vet->prix_unitaire);
+                }
+            }else{
+                $cout_total = (int)$commande->poids * (int)$commande->typeLavage->prix_par_kg;
+            }
 
-        $cout_total = 0;
-        // On recalcule la cout total de la commande
-        foreach ($commande->vetements as $vet) {
-            $cout_total += $this->multiplication($vet->quantite,$vet->prix_unitaire);
+            // update de la commande
+            $commande->cout_total = $cout_total;
+            $commande->save();
+
+            // on met a jour la caisse
+            $caisse =  Caisse::where('commande_id',$commande->id)->first();
+
+            if($caisse){
+                $caisse->update([
+                    'montant' => $cout_total
+                ]);
+            }
+
+            $caisseTotal = CaisseTotal::first();
+            $total = 0;
+            if($caisseTotal){
+                //  on retire l'ancien montant de la commande en caisse total
+                $total = (int)$caisseTotal->sum('montant') - (int)$old_commande->cout_total;
+                $total += (int)$cout_total;
+
+                $caisseTotal->update([
+                    'montant' => $total
+                ]);
+            }
+        } else {
+            // on met cout total de la commande a 0
+            $commande->cout_total = $cout_total;
+            $commande->save();
+
+            // on met a jour la caisse en enlevant le cout_total de la commande 
+            $caisse =  Caisse::where('commande_id',$commande->id)->first();
+
+            if($caisse){
+                $caisse->update([
+                    'montant' => $cout_total
+                ]);
+            }
+
+            $caisseTotal = CaisseTotal::first();
+            $total = 0;
+            if($caisseTotal){
+                //  on retire l'ancien montant de la commande en caisse total
+                $total = (int)$caisseTotal->sum('montant') - (int)$old_commande->cout_total;
+
+                $caisseTotal->update([
+                    'montant' => $total
+                ]);
+            }
         }
-
-        // update de la commande
-        $commande->cout_total = $cout_total;
-        $commande->save();
 
         Session::flash('success'," vêtement supprimé !");
         return back();
@@ -79,22 +130,58 @@ class CommandeController extends Controller
             "type_vetement_id"  => "required",
             "statut"            => "required",
             "service_demander"  => "required",
-            "quantite" => 'required'
+            "quantite"          => "required|min:1"
         ]);
 
+        // on met a jour le vetement
         $vetement = Vetement::findOrFail($request->vetement_id);
         $vetement->update($data);
 
-        $cout_total = 0;
-        // On recalcule la cout total de la commande
-        foreach ($vetement->commande->vetements as $vet) {
-            $cout_total += $this->multiplication($vet->quantite,$vet->prix_unitaire);
+        // on recupere la commande liee au vetement
+        $commande = $vetement->commande;
+        $old_commande = clone $vetement->commande;
+
+        // on verifie si c'est un lavage par piece
+        if (Str::contains($commande->typeLavage->name,'piece')) {
+
+            $cout_total = 0;
+            // On recalcule la cout total de la commande
+            foreach ($commande->vetements as $vet) {
+                $cout_total += $this->multiplication($vet->quantite,$vet->prix_unitaire);
+            }
+
+            // update le cout_total de la commande
+            $commande->cout_total = $cout_total;
+            $commande->save();
+        }
+        
+        // on recupere la nouvelle commande
+        $new_commande = Commande::findOrFail($commande->id);
+
+        # mise a jour de la caisse
+        $caisse =  Caisse::where('commande_id',$commande->id)->first();
+
+        if($caisse){
+            $caisse->update([
+                'montant' => $new_commande->cout_total
+            ]);
         }
 
-        // update de la commande
-        $commande = Commande::findOrFail($vetement->commande->id);
-        $commande->cout_total = $cout_total;
-        $commande->save();
+        $caisseTotal = CaisseTotal::first();
+
+        $total = 0;
+
+        if($caisseTotal){
+            //  on retire l'ancien montant de la commande en caisse total
+            $total = (int)$caisseTotal->sum('montant') - (int)$old_commande->cout_total;
+
+            // on ajoute au total le cout de la commande mise a jour
+            $total += (int)$new_commande->cout_total;
+
+            $caisseTotal->update([
+                'montant' => $total
+            ]);
+        }
 
         Session::flash('success',"La mise du vêtement à été éfféctuer avec succès !");
         return back();
