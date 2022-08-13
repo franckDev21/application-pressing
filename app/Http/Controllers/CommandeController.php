@@ -448,8 +448,8 @@ class CommandeController extends Controller
     public function printFacture(Commande $commande,Client $client){
 
         // send mail
-        // Mail::to($client->email)
-        //     ->send(new FactureMail($commande));
+        Mail::to($client->email)
+            ->send(new FactureMail($commande));
 
         $pdf = App::make('dompdf.wrapper');
 
